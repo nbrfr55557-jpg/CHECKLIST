@@ -1,0 +1,2077 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TIGRE HADF">
+<meta name="theme-color" content="#0a0e0d">
+<title>TIGRE HADF — Checklists</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #f0f0ec;
+    --bg2: #e4e4de;
+    --bg3: #d8d8d2;
+    --surface: #fff;
+    --border: #c0bfb8;
+    --accent: #1a1a1a;
+    --accent2: #1a1a1a;
+    --warn: #e6a000;
+    --danger: #c00000;
+    --text: #111;
+    --text-dim: #555;
+    --text-muted: #888;
+    --yellow: #f5e642;
+    --yellow-light: #fdf3a0;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Barlow Condensed', sans-serif;
+    --body: 'Barlow', sans-serif;
+  }
+
+  html.dark {
+    --bg: #0d1410;
+    --bg2: #121a16;
+    --bg3: #162019;
+    --surface: #1e2a22;
+    --border: #2a3d30;
+    --accent: #d4e8da;
+    --accent2: #d4e8da;
+    --warn: #e6a000;
+    --danger: #ff4545;
+    --text: #d4e8da;
+    --text-dim: #7a9a82;
+    --text-muted: #4a6a52;
+    --yellow: #f5e642;
+    --yellow-light: #2a2800;
+  }
+
+  /* ── DARK MODE overrides spécifiques ── */
+  html.dark .home-header { background: #0a0e0b; }
+  html.dark .doc-header { background: #0a0e0b; }
+  html.dark .check-item { background: var(--surface); border-bottom-color: var(--border); }
+  html.dark .check-item:active { background: var(--bg3); }
+  html.dark .check-item:last-child { border-bottom-color: var(--border); }
+  html.dark .check-box { background: var(--surface); border-color: var(--border); }
+  html.dark .check-item.done .check-box { background: var(--yellow); border-color: var(--yellow); }
+  html.dark .check-item.done .check-box::after { border-color: #000; }
+  html.dark .check-label { color: var(--text); }
+  html.dark .check-label strong { color: #fff; }
+  html.dark .check-value { color: #aaa; }
+  html.dark .check-who { background: rgba(245,230,66,0.15); border-color: rgba(245,230,66,0.3); color: var(--yellow); }
+  html.dark .check-who.p { background: rgba(255,80,80,0.1); border-color: rgba(255,80,80,0.3); color: #ff8888; }
+  html.dark .check-who.t { background: rgba(0,180,255,0.1); border-color: rgba(0,180,255,0.3); color: #88ccff; }
+  html.dark .section-header { background: #2a2600; border-color: var(--yellow); color: var(--yellow); }
+  html.dark .sub-section { background: #1a1800; border-color: var(--border); color: #ccc; }
+  html.dark .attention-box { background: rgba(192,0,0,0.1); border-color: rgba(192,0,0,0.4); }
+  html.dark .attention-box p { color: #ffaaaa; }
+  html.dark .nota-box { background: rgba(0,150,180,0.1); border-color: rgba(0,180,220,0.3); }
+  html.dark .nota-box p { color: #aadde8; }
+  html.dark .card { background: var(--surface); border-color: var(--border); }
+  html.dark .card-title { color: #fff; }
+  html.dark .stab { background: var(--surface); color: var(--text-muted); }
+  html.dark .stab.active { color: var(--yellow); border-bottom-color: var(--yellow); }
+  html.dark .reset-bar { background: var(--bg2); border-top-color: var(--border); }
+  html.dark .reset-btn { background: transparent; border-color: var(--border); color: var(--text-muted); }
+  html.dark .progress-bar { background: var(--border); }
+  html.dark .progress-fill { background: var(--yellow); }
+  html.dark .vi-card { background: var(--surface); border-color: var(--border); }
+  html.dark .vi-card-label { color: var(--text); }
+  html.dark .cat-card { background: var(--surface); border-color: var(--border); }
+  html.dark .proc-section-header { background: #2a2600; border-color: var(--yellow); color: var(--yellow); }
+  html.dark .proc-block { box-shadow: 0 2px 8px rgba(0,0,0,.5); }
+
+  /* ── BOUTON SWITCH DARK MODE ── */
+  #dark-toggle {
+    position: absolute;
+    top: 56px; right: 16px;
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.1);
+    border: 1.5px solid rgba(245,230,66,0.4);
+    border-radius: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background 0.15s;
+    z-index: 10;
+  }
+  #dark-toggle:active { background: rgba(255,255,255,0.2); }
+  #dark-toggle-icon { font-size: 14px; line-height: 1; }
+  #dark-toggle-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .dark-toggle-mini {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(245,230,66,0.35);
+    border-radius: 16px;
+    padding: 4px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background 0.12s;
+    line-height: 1;
+    z-index: 10;
+  }
+  .dark-toggle-mini:active { background: rgba(255,255,255,0.18); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    overflow: hidden;
+  }
+
+  /* ── APP SHELL ── */
+  #app {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s;
+  }
+  .screen.hidden { transform: translateX(100%); opacity: 0; pointer-events: none; }
+  .screen.slide-left { transform: translateX(-30%); opacity: 0; pointer-events: none; }
+
+  /* ── HOME SCREEN ── */
+  #home {
+    background: var(--bg);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .home-header {
+    padding: 56px 20px 24px;
+    background: #1a1a1a;
+    position: relative;
+    border-bottom: 4px solid var(--yellow);
+  }
+
+  .header-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--yellow);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+
+  .header-title {
+    font-family: var(--sans);
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 0.95;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+  }
+
+  .header-title span {
+    display: block;
+    font-size: 18px;
+    font-weight: 400;
+    color: #aaa;
+    letter-spacing: 4px;
+    margin-top: 6px;
+  }
+
+  .header-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #666;
+    margin-top: 12px;
+    letter-spacing: 1px;
+  }
+
+  .scanline { display: none; }
+
+  /* ── CARDS ── */
+  .cards {
+    padding: 16px 14px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1.5px solid #ccc;
+    border-radius: 0;
+    padding: 16px 16px 16px 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s;
+    -webkit-user-select: none;
+    user-select: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px; height: 100%;
+    background: var(--card-color, #1a1a1a);
+  }
+
+  .card:active { transform: scale(0.98); }
+
+  .card-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--card-color, #555);
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #111;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+  }
+
+  .card-subtitle {
+    font-family: var(--body);
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 5px;
+    font-weight: 400;
+  }
+
+  .card-count {
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-family: var(--mono);
+    font-size: 26px;
+    color: var(--card-color, #ccc);
+    opacity: 0.18;
+    line-height: 1;
+  }
+
+  .card-arrow {
+    position: absolute;
+    top: 50%; right: 14px;
+    transform: translateY(-50%);
+    color: #bbb;
+    font-size: 18px;
+  }
+
+  /* ── DOC SCREEN ── */
+  #doc-screen { background: var(--bg); }
+
+  .doc-header {
+    background: #1a1a1a;
+    border-bottom: 3px solid var(--yellow);
+    padding: 52px 16px 12px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 8px;
+    background: var(--yellow);
+    border: 2px solid #333;
+    padding: 7px 14px 7px 10px;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background 0.12s;
+  }
+  .back-btn:active { background: #e8d000; }
+
+  .back-btn svg { width: 18px; height: 18px; stroke: #111; flex-shrink: 0; }
+
+  .doc-title-line {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+
+  .doc-ref {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: #666;
+    letter-spacing: 1.5px;
+    margin-top: 2px;
+  }
+
+  /* section tabs */
+  .section-tabs {
+    display: flex;
+    overflow-x: auto;
+    background: #fff;
+    border-bottom: 2px solid #ccc;
+    flex-shrink: 0;
+    scrollbar-width: none;
+  }
+  .section-tabs::-webkit-scrollbar { display: none; }
+
+  .stab {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #888;
+    padding: 10px 14px;
+    white-space: nowrap;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s, border-color 0.15s;
+    flex-shrink: 0;
+    -webkit-user-select: none;
+    user-select: none;
+    background: #fff;
+  }
+  .stab.active { color: #111; border-bottom-color: var(--yellow); font-weight: 700; }
+
+  /* content area */
+  .doc-content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 0 40px;
+    background: var(--bg);
+  }
+
+  /* ── CHECKLIST ITEMS ── */
+  .section-block {
+    display: none;
+    padding: 12px;
+    animation: fadeIn 0.2s ease;
+  }
+  .section-block.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+
+  .section-header {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #111;
+    padding: 6px 10px;
+    background: var(--yellow);
+    border: 1.5px solid #333;
+    margin-bottom: 0;
+    margin-top: 12px;
+    text-align: center;
+  }
+  .section-header:first-child { margin-top: 0; }
+
+  .sub-section {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #000;
+    background: var(--yellow-light);
+    border: 1px solid #aaa;
+    border-top: none;
+    padding: 5px 10px;
+    text-align: center;
+    margin-bottom: 0;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    background: #fff;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background 0.12s;
+  }
+  .check-item:active { background: #f5f5f0; }
+  .check-item:last-child { border-bottom: 1.5px solid #333; }
+
+  .check-box {
+    width: 18px; height: 18px;
+    border: 1.5px solid #999;
+    border-radius: 0;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, background 0.15s;
+    background: #fff;
+  }
+
+  .check-item.done .check-box {
+    border-color: #333;
+    background: #333;
+  }
+  .check-item.done .check-box::after {
+    content: '';
+    width: 9px; height: 5px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: translateY(-1px) rotate(-45deg);
+  }
+
+  .check-item.done .check-label { opacity: 0.4; text-decoration: line-through; }
+  .check-item.done .check-value { opacity: 0.4; }
+
+  .check-who {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: #000;
+    background: var(--yellow);
+    border: 1px solid #999;
+    border-radius: 0;
+    padding: 1px 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  .check-who.p { background: #ffdddd; border-color: #c88; color: #800; }
+  .check-who.t { background: #ddeeff; border-color: #88b; color: #006; }
+
+  .check-body { flex: 1; min-width: 0; }
+
+  .check-label {
+    font-family: var(--body);
+    font-size: 14px;
+    color: #111;
+    line-height: 1.35;
+    transition: opacity 0.2s;
+  }
+  .check-label strong { color: #000; font-weight: 700; }
+
+  .check-value {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #444;
+    margin-top: 2px;
+    font-weight: 700;
+    transition: opacity 0.2s;
+  }
+
+  /* ATTENTION / NOTA boxes */
+  .attention-box {
+    border: 1.5px solid #333;
+    background: #fff;
+    padding: 10px 12px;
+    margin: 8px 0;
+  }
+  .attention-box .box-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #c00000;
+    text-decoration: underline;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .attention-box p {
+    font-family: var(--body);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #111;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .nota-box {
+    border: 1px solid #7bbfcc;
+    background: #d0eff5;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+  .nota-box .box-label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #000;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+  .nota-box p {
+    font-family: var(--body);
+    font-size: 12px;
+    line-height: 1.5;
+    color: #000;
+  }
+
+  /* reset button */
+  .reset-bar {
+    padding: 10px 14px;
+    border-top: 2px solid #ccc;
+    background: #fff;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .progress-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #888;
+  }
+  .progress-text span { color: #111; font-size: 13px; font-weight: 700; }
+
+  .reset-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #888;
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .reset-btn:active { color: #c00; border-color: #c00; }
+
+  /* progress bar */
+  .progress-bar { height: 3px; background: #e0e0e0; flex-shrink: 0; }
+  .progress-fill {
+    height: 100%;
+    background: #1a1a1a;
+    transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  /* ── BOTTOM SAFE AREA ── */
+  .safe-bottom { height: env(safe-area-inset-bottom, 0px); }
+
+  /* scrollbar */
+  .doc-content::-webkit-scrollbar { width: 3px; }
+  .doc-content::-webkit-scrollbar-track { background: transparent; }
+  .doc-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 2px; }
+  #home::-webkit-scrollbar { display: none; }
+
+  /* ── VI MENU SCREEN ── */
+  #vi-menu {
+    background: var(--bg);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  #vi-menu .cards { padding: 14px 14px 32px; }
+  .vi-card {
+    background: #fff;
+    border: 1.5px solid #ccc;
+    border-radius: 0;
+    padding: 13px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.12s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .vi-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: var(--card-color, #1a1a1a);
+  }
+  .vi-card:active { background: #f5f5f0; }
+  .vi-card-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #888;
+    min-width: 20px;
+    text-align: center;
+  }
+  .vi-card-label {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #111;
+    flex: 1;
+  }
+  .vi-card-arrow { color: #bbb; font-size: 20px; line-height: 1; }
+
+  /* ── PROC SCREEN ── */
+  #proc-screen { background: var(--bg); }
+  #proc-screen .doc-header { padding-bottom: 10px; }
+  .proc-view { display: none; flex: 1; overflow-y: auto; padding: 12px 12px 40px; -webkit-overflow-scrolling: touch; }
+  .proc-view.active { display: block; }
+  .cat-grid { display: flex; flex-direction: column; gap: 10px; }
+  .cat-card { background: #fff; border: 1.5px solid #ccc; border-radius: 0; overflow: hidden; cursor: pointer; transition: background 0.12s; -webkit-tap-highlight-color: transparent; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .cat-card:active { background: #f5f5f0; }
+  .cat-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
+  .cat-header-left { display: flex; align-items: center; gap: 12px; }
+  .cat-icon { font-size: 22px; }
+  .cat-name { font-family: var(--sans); font-weight: 700; font-size: 20px; letter-spacing: .08em; }
+  .cat-count { font-family: var(--mono); font-size: 11px; color: #888; }
+  .cat-arrow-p { color: #bbb; font-size: 18px; }
+  .cat-card.urg .cat-name { color: #c00000; }
+  .cat-card.deg .cat-name { color: #b07000; }
+  .cat-card.arm .cat-name { color: #c05000; }
+  .proc-section-header { font-family: var(--sans); font-weight: 700; font-size: 12px; letter-spacing: .15em; color: #000; padding: 6px 4px; border-bottom: 1.5px solid #333; margin-bottom: 8px; text-transform: uppercase; background: var(--yellow-light); margin-top: 14px; padding-left: 8px; }
+  .labels-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
+  .label-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 72px; padding: 12px 8px 10px; border-radius: 0; border: 2px solid; cursor: pointer; font-family: var(--sans); font-weight: 900; font-size: 19px; letter-spacing: .08em; text-align: center; line-height: 1.2; transition: filter .12s, transform .1s; position: relative; overflow: hidden; background: #000; -webkit-tap-highlight-color: transparent; }
+  .label-btn:active { filter: brightness(1.4); transform: scale(.96); }
+  .label-btn::after { display: none; }
+  .label-btn.urg { color: #ff3030; border-color: #ff3030; }
+  .label-btn.urg-orange { color: #ffb83d; border-color: #ffb83d; }
+  .label-btn.urg-text { color: #00c9ff; border-color: #00c9ff; }
+  .label-btn.deg { color: #ffb83d; border-color: #ffb83d; }
+  .label-btn.deg-text { color: #00c9ff; border-color: #00c9ff; }
+  .label-btn.arm { color: #ff8c00; border-color: #ff8c00; }
+  .label-btn .label-sub { font-size: 11px; font-weight: 400; opacity: .7; font-family: var(--body); margin-top: 3px; }
+  .proc-title { font-family: var(--sans); font-weight: 900; font-size: 20px; letter-spacing: .06em; margin-bottom: 2px; padding: 10px 0 2px; color: #111; }
+  .proc-category { font-family: var(--mono); font-size: 10px; color: #666; letter-spacing: .15em; margin-bottom: 10px; }
+  .proc-block { background: #fff; border: 1.5px solid #333; padding: 0; margin-bottom: 10px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.12); }
+  .proc-block-label { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 5px 10px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #000; background: var(--yellow); border-bottom: 1.5px solid #333; text-align: center; }
+  .proc-block-label.warn { background: var(--yellow-light); }
+  .proc-block-label.info { background: #b8e8f0; }
+  .proc-badge { display: inline-block; background: #111; color: #fff; font-size: 11px; font-weight: 700; padding: 1px 5px; }
+  .proc-attention { background: #fff; border-bottom: 1px solid #555; padding: 7px 12px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; text-align: center; color: #000; letter-spacing: .03em; line-height: 1.4; }
+  .proc-attention-title { font-size: 13px; letter-spacing: .15em; margin-bottom: 3px; text-decoration: underline; }
+  .proc-nota { background: #d0eff5; border-bottom: 1px solid #7bbfcc; border-top: 1px solid #7bbfcc; padding: 6px 10px; font-size: 13px; color: #000; line-height: 1.5; font-family: var(--body); }
+  .proc-nota-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: .1em; margin-bottom: 2px; }
+  .proc-step { display: flex; align-items: baseline; justify-content: space-between; padding: 5px 10px; border-bottom: 1px solid #ccc; font-size: 13.5px; line-height: 1.45; color: #111; background: #fff; font-family: var(--body); gap: 10px; }
+  .proc-step:last-child { border-bottom: none; }
+  .proc-step-left { flex: 1; }
+  .proc-step-right { text-align: right; font-weight: 700; white-space: nowrap; flex-shrink: 0; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; }
+  .proc-cond { font-weight: 700; color: #000; font-size: 13.5px; padding: 5px 10px 3px; font-family: var(--body); background: #f7f7f7; border-bottom: 1px solid #ccc; border-top: 1px solid #ccc; }
+  .proc-conclusion { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 15px; text-align: center; padding: 8px 10px; letter-spacing: .1em; color: #000; background: #fff; border-top: 1px solid #aaa; border-bottom: 1px solid #aaa; text-transform: uppercase; }
+  .proc-conclusion:last-child { border-bottom: none; }
+  .proc-conclusion.atterrir-imm { color: #c00000; font-size: 16px; }
+  .proc-conclusion.atterrir-poss { color: #7b2000; }
+  .proc-conclusion.ecourter { color: #444; }
+  .proc-conclusion.poursuivre { color: #000; }
+  .proc-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .proc-table td { padding: 5px 10px; border: 1px solid #ccc; vertical-align: top; color: #111; background: #fff; }
+  .proc-table td:first-child { width: 55%; }
+  .proc-table td:last-child { font-weight: 700; text-align: right; }
+  .proc-view::-webkit-scrollbar { width: 3px; }
+  .proc-view::-webkit-scrollbar-track { background: transparent; }
+  .proc-view::-webkit-scrollbar-thumb { background: #ccc; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══════════════════════════════════════════
+     HOME SCREEN
+══════════════════════════════════════════ -->
+<div class="screen" id="home">
+  <div class="home-header">
+    <div class="scanline"></div>
+    <button id="dark-toggle" onclick="toggleDark()">
+      <span id="dark-toggle-icon">🌙</span>
+      <span id="dark-toggle-label">Nuit</span>
+    </button>
+    <div class="header-badge">FCCLP · HAD · HADF</div>
+    <div class="header-title">
+      TIGRE
+      <span>Check-lists opérationnelles</span>
+    </div>
+    <div class="header-sub">© Airbus Helicopters 2024 · Usage équipage</div>
+  </div>
+
+  <div class="cards">
+
+    <div class="card" style="--card-color: #00c9ff" onclick="openViMenu()">
+      <div class="card-tag">◎ IFR / IMC</div>
+      <div class="card-title">Vol aux Instruments<br>IETP21</div>
+      <div class="card-subtitle">Décollage VI · Croisière · Approche finale</div>
+      <div class="card-count">9</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+    <div class="card" style="--card-color: #ff4545" onclick="openProcMenu()">
+      <div class="card-tag">⚠ URG / DEG / ARM</div>
+      <div class="card-title">Procédures Urgence<br>IETP21</div>
+      <div class="card-subtitle">Urgences · Dégradées · Armement</div>
+      <div class="card-count">!</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+    <div class="card" style="--card-color: #ff4545" onclick="openCombatMenu()">
+      <div class="card-tag">✦ Combat</div>
+      <div class="card-title">Checks Combat</div>
+      <div class="card-subtitle">AV D/L — LE — SIL/VI — VI/SIL</div>
+      <div class="card-count">25</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+    <div class="card" style="--card-color: #ffb83d" onclick="openDoc('arret')">
+      <div class="card-tag">◈ Procédures normales</div>
+      <div class="card-title">Démarrage &amp; Arrêt<br>IETP21</div>
+      <div class="card-subtitle">INT · AV DEM · D NORM · CLUTCH · ARMOT</div>
+      <div class="card-count">12</div>
+      <div class="card-arrow">›</div>
+    </div>
+
+
+  </div>
+  <div class="safe-bottom"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     VI MENU SCREEN
+══════════════════════════════════════════ -->
+<div class="screen hidden" id="vi-menu">
+  <div class="doc-header">
+    <button class="dark-toggle-mini" onclick="toggleDark()" id="dt-vi">🌙</button>
+    <div class="back-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      Accueil
+    </div>
+    <div class="doc-title-line">VOL AUX INSTRUMENTS (VI)</div>
+    <div class="doc-ref">JP-A-15-50-00-00F-135A-A · HADF · © Airbus Helicopters 2024</div>
+  </div>
+  <div class="cards">
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('avdec')"><span class="vi-card-num">01</span><span class="vi-card-label">Vérif avant décollage VI</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('aprclair')"><span class="vi-card-num">02</span><span class="vi-card-label">Vérif après clairance</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('axe')"><span class="vi-card-num">03</span><span class="vi-card-label">Vérif sur axe de piste / statio</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('aprdec')"><span class="vi-card-num">04</span><span class="vi-card-label">Vérif après décollage</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('croisiere')"><span class="vi-card-num">05</span><span class="vi-card-label">Vérif en croisière</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('ptournant')"><span class="vi-card-num">06</span><span class="vi-card-label">Vérif point tournant</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('avchgalt')"><span class="vi-card-num">07</span><span class="vi-card-label">Vérif avant changement d'altitude</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('approche')"><span class="vi-card-num">08</span><span class="vi-card-label">Approche</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00c9ff" onclick="openViSection('remisegaz')"><span class="vi-card-num">09</span><span class="vi-card-label">Vérif après remise de gaz</span><span class="vi-card-arrow">›</span></div>
+  </div>
+  <div class="safe-bottom"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     COMBAT MENU SCREEN
+══════════════════════════════════════════ -->
+<div class="screen hidden" id="combat-menu">
+  <div class="doc-header">
+    <button class="dark-toggle-mini" onclick="toggleDark()" id="dt-combat">🌙</button>
+    <div class="back-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      Accueil
+    </div>
+    <div class="doc-title-line">CHECKS COMBAT</div>
+    <div class="doc-ref">V1.0 · HAD/HADF · Avec SIL</div>
+  </div>
+  <div class="cards">
+    <div class="vi-card" style="--card-color:#ff4545" onclick="openCombatSection('avdecol')"><span class="vi-card-num">01</span><span class="vi-card-label">Avant Décollage</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#ff4545" onclick="openCombatSection('le')"><span class="vi-card-num">02</span><span class="vi-card-label">LE 2.0</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#ff4545" onclick="openCombatSection('silviapr')"><span class="vi-card-num">03</span><span class="vi-card-label">SIL/VI — Après passage en couche</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#ff4545" onclick="openCombatSection('silviavt')"><span class="vi-card-num">04</span><span class="vi-card-label">SIL/VI — Avant passage en couche</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#ff4545" onclick="openCombatSection('visil')"><span class="vi-card-num">05</span><span class="vi-card-label">VI-SIL</span><span class="vi-card-arrow">›</span></div>
+  </div>
+  <div class="safe-bottom"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     DOC SCREEN
+══════════════════════════════════════════ -->
+<div class="screen hidden" id="doc-screen">
+  <div class="doc-header">
+    <button class="dark-toggle-mini" onclick="toggleDark()" id="dt-doc">🌙</button>
+    <div class="back-btn" id="doc-back-btn" onclick="docGoBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <span id="doc-back-label">Accueil</span>
+    </div>
+    <div class="doc-title-line" id="doc-title">—</div>
+    <div class="doc-ref" id="doc-ref">—</div>
+  </div>
+
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="section-tabs" id="section-tabs"></div>
+
+  <div class="doc-content" id="doc-content"></div>
+
+  <div class="reset-bar">
+    <div class="progress-text">
+      <span id="done-count">0</span> / <span id="total-count">0</span> items cochés
+    </div>
+    <button class="reset-btn" onclick="resetChecks()">Réinitialiser</button>
+  </div>
+  <div class="safe-bottom"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PROC SCREEN
+══════════════════════════════════════════ -->
+<div class="screen hidden" id="proc-screen">
+  <div class="doc-header">
+    <button class="dark-toggle-mini" onclick="toggleDark()" id="dt-proc">🌙</button>
+    <div class="back-btn" onclick="procGoBack()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <span id="proc-back-label">Accueil</span>
+    </div>
+    <div class="doc-title-line" id="proc-header-title">PROCÉDURES URGENCE</div>
+    <div class="doc-ref" id="proc-header-sub">URG / DEG / ARM · IETP21</div>
+  </div>
+
+  <!-- Vue home procédures -->
+  <div class="proc-view active" id="pViewHome">
+    <div class="cat-grid">
+      <div class="cat-card urg" onclick="pShowCat('urg')">
+        <div class="cat-header">
+          <div class="cat-header-left"><div class="cat-icon">🔴</div><div><div class="cat-name">URGENCES</div><div class="cat-count">ACFT · ENG · ELEC · TRN · HYD</div></div></div>
+          <div class="cat-arrow-p">›</div>
+        </div>
+      </div>
+      <div class="cat-card deg" onclick="pShowCat('deg')">
+        <div class="cat-header">
+          <div class="cat-header-left"><div class="cat-icon">🟡</div><div><div class="cat-name">DÉGRADÉES</div><div class="cat-count">ACFT · ENG · ELEC · FUEL · TRN</div></div></div>
+          <div class="cat-arrow-p">›</div>
+        </div>
+      </div>
+      <div class="cat-card arm" onclick="pShowCat('arm')">
+        <div class="cat-header">
+          <div class="cat-header-left"><div class="cat-icon">🟠</div><div><div class="cat-name">ARMEMENT</div><div class="cat-count">GUN · MISTRAL · HELLFIRE · RKT</div></div></div>
+          <div class="cat-arrow-p">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vue cat URG -->
+  <div class="proc-view" id="pViewUrg">
+    <div class="proc-section-header">PANNE AÉRONEF (ACFT)</div>
+    <div class="labels-grid">
+      <button class="label-btn urg-text" onclick="pShowProc('feu_elec')">FEU ÉLECTRIQUE</button>
+      <button class="label-btn urg-text" onclick="pShowProc('fumee')">FUMÉE CABINE</button>
+      <button class="label-btn urg-text" onclick="pShowProc('foudroiement_direct')">FOUDROIEMENT<span class="label-sub">DIRECT</span></button>
+      <button class="label-btn urg-text" onclick="pShowProc('foudroiement_indirect')">FOUDROIEMENT<span class="label-sub">INDIRECT</span></button>
+      <button class="label-btn urg-orange" onclick="pShowProc('vent')">VENT.T</button>
+      <button class="label-btn urg-text" onclick="pShowProc('trim_release')">TRIM RELEASE</button>
+    </div>
+    <div class="proc-section-header">PANNE MOTEUR (ENG)</div>
+    <div class="labels-grid">
+      <button class="label-btn urg-text" onclick="pShowProc('dem_manuel')">DÉM. MANUEL<span class="label-sub">PROCÉDURE</span></button>
+      <button class="label-btn urg-text" onclick="pShowProc('arret_urgence')">ARRÊT URGENCE<span class="label-sub">MOTEURS</span></button>
+      <button class="label-btn urg-text" onclick="pShowProc('redem')">REDÉMARRAGE<span class="label-sub">APRÈS ARRÊT URG</span></button>
+      <button class="label-btn urg-text" onclick="pShowProc('panne_moteur_vol')">PANNE MOTEUR<span class="label-sub">EN VOL / H/V</span></button>
+      <button class="label-btn urg" onclick="pShowProc('fire1_2')">FIRE 1 / FIRE 2</button>
+      <button class="label-btn urg" onclick="pShowProc('fire_detect')">FIRE D + FAIL</button>
+      <button class="label-btn urg" onclick="pShowProc('gov1_et_gov2')">GOV 1 ET GOV 2<span class="label-sub">EN VOL</span></button>
+      <button class="label-btn urg" onclick="pShowProc('ospd')">OSPD 1 / OSPD 2</button>
+      <button class="label-btn urg" onclick="pShowProc('pwr')">PWR</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('oilp')">OILP 1 / OILP 2</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('oilp_sol')">GOV 1 et GOV 2<span class="label-sub">AU SOL</span></button>
+      <button class="label-btn urg-orange" onclick="pShowProc('oilp_bas')">OILP — BAS</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('oilt')">OILT 1 / OILT 2</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('oil_filt')">OIL FILT</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('eng_chip')">ENG CHIP</button>
+    </div>
+    <div class="proc-section-header">PANNE ÉLECTRIQUE (ELEC)</div>
+    <div class="labels-grid">
+      <button class="label-btn urg" onclick="pShowProc('bat_t')">BAT T1 / BAT T2</button>
+    </div>
+    <div class="proc-section-header">PANNE TRANSMISSION (TRN)</div>
+    <div class="labels-grid">
+      <button class="label-btn urg" onclick="pShowProc('rot_bk')">ROT.BK</button>
+      <button class="label-btn urg" onclick="pShowProc('mgb_p_urg')">MGB.P</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('mgb_t')">MGB.T</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('igb_t')">IGB.T</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('tgb_t')">TGB.T</button>
+      <button class="label-btn urg-orange" onclick="pShowProc('gb_chip')">GB.CHIP</button>
+    </div>
+    <div class="proc-section-header">PANNE HYDRAULIQUE (HYD)</div>
+    <div class="labels-grid">
+      <button class="label-btn urg-orange" onclick="pShowProc('hyd')">HYD 1 / HYD 2</button>
+    </div>
+  </div>
+
+  <!-- Vue cat DEG -->
+  <div class="proc-view" id="pViewDeg">
+    <div class="proc-section-header">PANNE AÉRONEF (DEG-ACFT)</div>
+    <div class="labels-grid">
+      <button class="label-btn deg" onclick="pShowProc('att_dis')">ATT DIS</button>
+      <button class="label-btn deg" onclick="pShowProc('afcs_reset')">AFCS<span class="label-sub">RÉINITIALISATION</span></button>
+      <button class="label-btn deg" onclick="pShowProc('afcs_axe')">AFCS<span class="label-sub">AXE / FONCTION</span></button>
+      <button class="label-btn deg" onclick="pShowProc('bcsg')">BCSG</button>
+      <button class="label-btn deg" onclick="pShowProc('ecas')">ECAS</button>
+      <button class="label-btn deg" onclick="pShowProc('hdg_dis')">HDG DIS</button>
+      <button class="label-btn deg" onclick="pShowProc('ptmu')">PTMU</button>
+      <button class="label-btn deg" onclick="pShowProc('ptmu_dis')">PTMU DIS</button>
+      <button class="label-btn deg" onclick="pShowProc('rtu')">RTU 1 / RTU 2</button>
+      <button class="label-btn deg" onclick="pShowProc('sd_dis')">SD DIS</button>
+    </div>
+    <div class="proc-section-header">PANNE MOTEUR (DEG-ENG)</div>
+    <div class="labels-grid">
+      <button class="label-btn deg" onclick="pShowProc('gov_deg')">GOV 1 / GOV 2<span class="label-sub">+ MAN</span></button>
+      <button class="label-btn deg" onclick="pShowProc('eng_dis')">ENG DIS</button>
+      <button class="label-btn deg" onclick="pShowProc('fire_d_deg')">FIRE D + FAIL</button>
+      <button class="label-btn deg" onclick="pShowProc('ospeed_deg')">OSPEED</button>
+      <button class="label-btn deg" onclick="pShowProc('sand')">SAND</button>
+      <button class="label-btn deg" onclick="pShowProc('engine_lem')">ENGINE 1 / ENGINE 2<span class="label-sub">LEM</span></button>
+    </div>
+    <div class="proc-section-header">PANNE ÉLECTRIQUE (DEG-ELEC)</div>
+    <div class="labels-grid">
+      <button class="label-btn deg" onclick="pShowProc('alt_deg')">ALT 1 / ALT 2</button>
+      <button class="label-btn deg-text" onclick="pShowProc('perte_alt')">PERTE 2 ALT</button>
+      <button class="label-btn deg" onclick="pShowProc('bat_deg')">BAT 1 / BAT 2</button>
+      <button class="label-btn deg" onclick="pShowProc('tru_deg')">TRU 1 / TRU 2</button>
+    </div>
+    <div class="proc-section-header">PANNE CARBURANT (DEG-FUEL)</div>
+    <div class="labels-grid">
+      <button class="label-btn deg" onclick="pShowProc('flow')">F LOW 1 / F LOW 2</button>
+      <button class="label-btn deg" onclick="pShowProc('fuel_deg')">FUEL</button>
+      <button class="label-btn deg" onclick="pShowProc('fuel_bp')">FUEL BP</button>
+      <button class="label-btn deg" onclick="pShowProc('fuel_p')">FUEL P1 / FUEL P2</button>
+      <button class="label-btn deg" onclick="pShowProc('f_filt')">F FILT</button>
+      <button class="label-btn deg" onclick="pShowProc('f_gauge')">F GAUGE</button>
+      <button class="label-btn deg" onclick="pShowProc('ferry')">FERRY</button>
+      <button class="label-btn deg" onclick="pShowProc('bingo')">BINGO</button>
+    </div>
+    <div class="proc-section-header">PANNE TRANSMISSION (DEG-TRN)</div>
+    <div class="labels-grid">
+      <button class="label-btn deg" onclick="pShowProc('aux_p')">AUX.P</button>
+    </div>
+  </div>
+
+  <!-- Vue cat ARM -->
+  <div class="proc-view" id="pViewArm">
+    <div class="proc-section-header">ARMEMENT (DEG-ARM)</div>
+    <div class="labels-grid">
+      <button class="label-btn arm" onclick="pShowProc('acp')">ACP</button>
+      <button class="label-btn arm" onclick="pShowProc('amcsg')">AMCSG</button>
+      <button class="label-btn arm" onclick="pShowProc('gun')">GUN</button>
+      <button class="label-btn arm" onclick="pShowProc('mep')">MEP</button>
+      <button class="label-btn arm" onclick="pShowProc('mistral')">MISTRAL</button>
+      <button class="label-btn arm" onclick="pShowProc('hellfire')">HELLFIRE</button>
+      <button class="label-btn arm" onclick="pShowProc('misfire')">MISFIRE</button>
+      <button class="label-btn arm" onclick="pShowProc('hangfire')">HANGFIRE</button>
+      <button class="label-btn arm" onclick="pShowProc('rkt')">RKT</button>
+    </div>
+  </div>
+
+  <!-- Vue procédure -->
+  <div class="proc-view" id="pViewProc"></div>
+
+  <div class="safe-bottom"></div>
+</div>
+
+</div><!-- #app -->
+
+<script>
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+
+const DOCS = {
+
+// ── CHECK COMBAT ──────────────────────────
+combat: {
+  title: 'CHECKS COMBAT',
+  ref: 'V1.0 · HAD/HADF · Avec SIL',
+  color: '#ff4545',
+  sections: [
+    {
+      id: 'avdecol',
+      label: 'AV DÉC',
+      content: [
+        { type:'header', text:'CHECKS COMBAT AVANT LE DECOLLAGE (+SIL)' },
+        { type:'nota', text:'En stationnaire, effectuer un engagement de chaque armement pour s\'assurer de leur validité.' },
+        { who:'P+T', label:'Harnais de sécurité', value:'verrouillés' },
+        { who:'P+T', label:'Fenêtres', value:'fermées' },
+        { who:'P+T', label:'Blindages latéraux', value:'en place' },
+        { who:'P',   label:'Butée monomoteur', value:'SUP' },
+        { who:'P',   label:'Phare', value:'réglé' },
+        { who:'T',   label:'CDU/NAV', value:'sélectionné' },
+        { who:'P',   label:'Frein de parking', value:'voyant éteint' },
+        { who:'P',   label:'Roulette de queue <strong>TAIL WHL</strong>', value:'éteint' },
+        { who:'P',   label:'<strong>M/ARM</strong>', value:'sur ON' },
+        { who:'P',   label:'Weapon configuration', value:'std / GUNNER' },
+        { who:'P',   label:'<strong>AFCS</strong>', value:'sur ON' },
+        { who:'P+T', label:'Altimètres (secours et MFD)', value:'réglés et vérifiés' },
+        { who:'P+T', label:'Hauteur de décision', value:'réglée' },
+        { who:'P',   label:'Horizon de secours', value:'vérifié' },
+        { who:'P+T', label:'Pressions et températures', value:'vérifiées' },
+        { who:'P+T', label:'Tous les voyants d\'alarme', value:'éteints' },
+        { who:'P+T', label:'Éclairages intérieurs (LVL sur NVG, UV, GR, INT)', value:'réglés' },
+        { who:'P',   label:'Éclairages extérieurs (ELC)', value:'réglés' },
+        { who:'P+T', label:'SIL + DVN', value:'réglés' },
+        { who:'P+T', label:'Pages MFD', value:'configurées' },
+        { who:'T',   label:'Mission Management', value:'initialisé' },
+        { who:'T',   label:'HARMO RMS', value:'effectuée' },
+        { who:'T',   label:'Clé LRFD', value:'sur LRF' },
+        { who:'T',   label:'Munitions', value:'configurées' },
+        { who:'P+T', label:'Weapon Selection', value:'effectué' },
+        { who:'P+T', label:'Sight selection — vérifier modes PILSLAV-GNRSLAV', value:'effectué' },
+        { who:'T',   label:'Télémètre', value:'ON' },
+        { who:'P/T', label:'IFF', value:'à la demande' },
+        { who:'P',   label:'Système de chauffage', value:'sur OFF' },
+        { who:'T',   label:'CFD', value:'configuré' },
+        { who:'P+T', label:'Canon relevé dans l\'axe', value:'' },
+      ]
+    },
+    {
+      id: 'le',
+      label: 'LE 2.0',
+      content: [
+        { type:'header', text:'CHECKS LIGNE D\'ENGAGEMENT V2.0' },
+        { who:'P',   label:'Eclairage extérieur sur OFF', value:'' },
+        { who:'T',   label:'DVR à la demande', value:'' },
+        { who:'T',   label:'HARMO RMS effectuée', value:'' },
+        { who:'T',   label:'LRFD à la demande', value:'' },
+        { who:'T',   label:'DOP MUTE à la demande', value:'' },
+        { who:'T',   label:'RADALT à la demande', value:'' },
+        { who:'T',   label:'EWS configuré', value:'' },
+        { who:'T',   label:'FIRE ON', value:'' },
+        { who:'T',   label:'IFF à la demande', value:'' },
+        { who:'T',   label:'CFD configuré', value:'' },
+      ]
+    },
+    {
+      id: 'silviapr',
+      label: 'SIL/VI APR',
+      content: [
+        { type:'header', text:'CHECKS SIL/VI — APRÈS PASSAGE EN COUCHE V5.0' },
+        { who:'P',   label:'Butée monomoteur / Puissance', value:'SUP/PMC' },
+        { who:'T',   label:'Chrono', value:'Déclenché' },
+        { who:'P+T', label:'Vitesse et taux de montée', value:'Annoncés, vérifiés' },
+        { who:'P+T', label:'Couplages et navigation', value:'Annoncés, vérifiés' },
+        { who:'T',   label:'IFF', value:'à la demande' },
+        { who:'P+T', label:'DH 1000 ft / 500 ft POA', value:'Annoncée, réglée' },
+        { who:'P+T', label:'DA', value:'Annoncée, réglée' },
+        { who:'P',   label:'Horizon de secours', value:'Vérifié' },
+        { who:'P+T', label:'Caps', value:'Annoncés, vérifiés' },
+        { who:'P',   label:'Cohérence instruments de secours', value:'Vérifiée' },
+        { who:'T',   label:'CDU/NAV/RNAV', value:'Moyens sélectionnés' },
+        { who:'P+T', label:'MFD B/UP', value:'Sélectionné' },
+        { who:'P+T', label:'Autonomie', value:'Vérifiée' },
+        { who:'T',   label:'Contact radio', value:'Effectué' },
+        { who:'P+T', label:'Altimètres/QNH (secours et MFD)', value:'Réglés, vérifiés' },
+        { who:'T',   label:'Météo, minima', value:'Annoncés, vérifiés' },
+        { who:'T',   label:'Clearance', value:'Annoncée' },
+        { who:'P+T', label:'Pressions / températures', value:'Vérifiées' },
+        { who:'P+T', label:'M/ARM', value:'À la demande' },
+        { who:'T',   label:'SIGHTING/IR/HARMO RMS', value:'À la demande' },
+        { who:'P+T', label:'Éclairages intérieurs (ILC)', value:'Réglés' },
+        { who:'P',   label:'Éclairages extérieurs (ELC)', value:'Réglés' },
+        { who:'P+T', label:'SIL', value:'Relevées' },
+        { who:'P+T', label:'Prochaine estimée', value:'Annoncée, vérifiée' },
+      ]
+    },
+    {
+      id: 'silviavt',
+      label: 'SIL/VI AVT',
+      content: [
+        { type:'header', text:'CHECKS SIL/VI — AVANT PASSAGE EN COUCHE V3.0' },
+        { who:'P',   label:'Butée monomoteur / Puissance', value:'SUP/PMC' },
+        { who:'P',   label:'Horizon de secours', value:'Vérifié' },
+        { who:'P+T', label:'Caps', value:'Annoncés, vérifiés' },
+        { who:'P',   label:'Cohérence instruments de secours', value:'Vérifiée' },
+        { who:'T',   label:'CDU/NAV/RNAV', value:'Moyens sélectionnés' },
+        { who:'P+T', label:'Couplages et navigation', value:'Annoncés, vérifiés' },
+        { who:'P+T', label:'MFD B/UP', value:'Sélectionné' },
+        { who:'P+T', label:'Autonomie', value:'Vérifiée' },
+        { who:'T',   label:'Contact radio', value:'Effectué' },
+        { who:'P+T', label:'Altimètres/QNH (secours et MFD)', value:'Réglés, vérifiés' },
+        { who:'T',   label:'Météo, minima', value:'Annoncés, vérifiés' },
+        { who:'T',   label:'Clearance', value:'Annoncée' },
+        { who:'P+T', label:'DH 1000 ft / 500 ft POA', value:'Annoncée, réglée' },
+        { who:'P+T', label:'DA', value:'Annoncée, réglée' },
+        { who:'P+T', label:'Pressions / températures', value:'Vérifiées' },
+        { who:'P+T', label:'M/ARM', value:'À la demande' },
+        { who:'T',   label:'SIGHTING/IR/HARMO RMS', value:'À la demande' },
+        { who:'P+T', label:'Éclairages intérieurs (ILC)', value:'Réglés' },
+        { who:'P',   label:'Éclairages extérieurs (ELC)', value:'Réglés' },
+        { who:'P+T', label:'SIL', value:'Relevées' },
+        { who:'T',   label:'IFF', value:'À la demande' },
+        { who:'P+T', label:'Cap, Niveau/Altitude de stabilisation', value:'Annoncés' },
+        { who:'P+T', label:'Vitesse et taux de montée', value:'Annoncés, vérifiés' },
+        { who:'P+T', label:'Prochaine estimée', value:'Annoncée, vérifiée' },
+        { who:'T',   label:'Chrono', value:'Déclenché' },
+      ]
+    },
+    {
+      id: 'visil',
+      label: 'VI-SIL',
+      content: [
+        { type:'header', text:'CHECKS VI-SIL V4.0' },
+        { who:'P',   label:'Butée monomoteur / Puissance', value:'SUP/PMC' },
+        { who:'P',   label:'Phare', value:'Réglé' },
+        { who:'P+T', label:'Caps', value:'Annoncés, vérifiés' },
+        { who:'T',   label:'CDU/NAV', value:'Sélectionnée' },
+        { who:'P+T', label:'Altimètres/QNH (secours et MFD)', value:'Réglés, vérifiés' },
+        { who:'P+T', label:'DA/DH', value:'Annoncées, réglées' },
+        { who:'P+T', label:'Éclairages intérieurs (ILC)', value:'Réglés' },
+        { who:'P',   label:'Éclairages extérieurs (ELC)', value:'Réglés' },
+        { who:'P+T', label:'SIL + DVN', value:'Réglés' },
+        { who:'T',   label:'SIGHTING/IR/HARMO RMS', value:'À la demande' },
+        { who:'T',   label:'IFF', value:'À la demande' },
+        { who:'P+T', label:'M/ARM', value:'À la demande' },
+      ]
+    },
+  ]
+},
+
+// ── CONTRÔLE INTÉRIEUR + ARRÊT ─────────────
+arret: {
+  title: 'CHECK-LIST IETP21 — PROCÉDURES NORMALES',
+  ref: 'JP-A-15-30-00 · HADF · © Airbus Helicopters 2024',
+  color: '#ffb83d',
+  sections: [
+    {
+      id: 'int',
+      label: 'INT',
+      content: [
+        { type:'header', text:'CONTRÔLE INTÉRIEUR — CABINE' },
+        { type:'attention', text:'Vérifier que la protection solaire, si installée, n\'interfère pas avec le cordon détonant de largage verrière. Si la protection reste installée durant le vol, vérifier qu\'en cas d\'intention de retrait en vol, que la ligne pyrotechnique est positionnée entre la protection et la verrière supérieure.' },
+        { who:'P',   label:'<strong>RLG/NORM</strong>', value:'sur RLG' },
+        { who:'T',   label:'RMS flamme enlevée, robinet ouvert, pression > 50 bar', value:'' },
+        { who:'T',   label:'Appui front', value:'en place, verrouillé' },
+        { who:'P+T', label:'Blindages latéraux', value:'réglés' },
+        { who:'P+T', label:'Siège, harnais de sécurité, manche cyclique et palonniers', value:'réglés' },
+        { who:'P',   label:'Frein de parking', value:'serré' },
+        { who:'P',   label:'Pas collectif', value:'sandow en place' },
+        { who:'P',   label:'Frein rotor', value:'à la demande' },
+        { who:'P+T', label:'Équipements non fixés', value:'sécurisés' },
+        { who:'P+T', label:'Lampe de secours', value:'vérifiées' },
+        { type:'subheader', text:'PUPITRE CENTRAL' },
+        { who:'P+T', label:'<strong>MASTER CUT OFF</strong>', value:'en haut, freiné' },
+        { who:'P',   label:'<strong>EMERGENCY CUT OFF</strong>', value:'en haut, freiné' },
+        { who:'P',   label:'<strong>BAT1, BAT2</strong>', value:'sur OFF' },
+        { who:'P',   label:'ELT', value:'ARMED' },
+        { who:'P+T', label:'Disjoncteurs', value:'enclenchés' },
+        { who:'P+T', label:'Interrupteur éclairage panneaux disjoncteurs', value:'en position basse, sur OFF' },
+        { type:'subheader', text:'PUPITRE GAUCHE' },
+        { who:'P',   label:'<strong>ALT1, TR1</strong>', value:'sur ON' },
+        { who:'P',   label:'<strong>HEATING BAT1</strong> — si OAT ≤ 0°C : HEATING BAT1 et BAT2', value:'sur OFF (ON)' },
+        { who:'P+T', label:'Sur le WCP : <strong>HEAT</strong>', value:'sur OFF' },
+        { who:'P+T', label:'<strong>WIPE</strong>', value:'sur OFF' },
+        { who:'T',   label:'Sur le RMSCP : <strong>SIGHTING/STOWAGE</strong>', value:'sur STOWAGE' },
+        { who:'T',   label:'IR', value:'sur OFF' },
+        { who:'T',   label:'<strong>SG2/SG1/IR/TV</strong>', value:'sur SG1' },
+        { who:'T',   label:'Clef laser', value:'fixée si présence, en fonction de la mission' },
+        { who:'P',   label:'Sur le FCP : <strong>PUMP1, PUMP2</strong>', value:'sur OFF' },
+        { who:'P',   label:'<strong>FERRY TANK</strong>', value:'sur OFF' },
+        { who:'P',   label:'PSCU : <strong>FM1/FM2</strong> — Tous les sélecteurs', value:'sur FM1 — sur ON vers l\'avant' },
+        { who:'P',   label:'PR4G', value:'à la demande' },
+        { who:'P+T', label:'Sur l\'ECP : MET 1 et 2', value:'sur N' },
+        { who:'P',   label:'Boutons poussoirs <strong>GOV</strong>', value:'liserés apparents' },
+        { who:'P+T', label:'Vérifier DID-P, DID-G', value:'insérés' },
+        { type:'subheader', text:'PANNEAU INSTRUMENTS (BLOCK2)' },
+        { who:'P+T', label:'Chronomètre', value:'réglé' },
+        { who:'T',   label:'ACP-G', value:'tous caches rabattus' },
+        { who:'P',   label:'ACP-P', value:'tous caches rabattus, configuration' },
+        { who:'P',   label:'<strong>M/ARM</strong>', value:'sur OFF, cache rabattu' },
+        { who:'P+T', label:'Central clear', value:'cache rabattu' },
+        { who:'P+T', label:'Sur les EEP : <strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur SHUT OFF' },
+        { who:'P',   label:'Compas de secours', value:'courbe de déviation affichée, éclairage sur OFF' },
+        { who:'P',   label:'Altimètre (secours)', value:'réglé' },
+        { who:'P+T', label:'MFD : <strong>N/B/UP</strong>', value:'sur N' },
+        { who:'P+T', label:'<strong>BRT</strong>', value:'au maximum' },
+        { who:'P+T', label:'<strong>BAL</strong>', value:'réglé à environ 50%' },
+        { type:'subheader', text:'PUPITRE DROIT' },
+        { who:'P+T', label:'Commandes d\'éclairage', value:'sur OFF' },
+        { who:'P+T', label:'<strong>LVL</strong>', value:'sur NOR' },
+        { who:'P',   label:'Éclairage extérieur', value:'sur OFF' },
+        { who:'P',   label:'Air conditionné', value:'sur OFF' },
+        { who:'P',   label:'<strong>ACC.D/MAIN</strong>', value:'sur MAIN' },
+        { who:'P',   label:'<strong>VALID</strong>', value:'cache rabattu' },
+        { who:'P',   label:'Panneau hydraulique', value:'tous caches rabattus' },
+        { who:'T',   label:'IFF : <strong>MODE</strong>', value:'sur OFF' },
+        { who:'T',   label:'Sur la RCB-IFF : <strong>MODE</strong>', value:'sur OFF' },
+        { who:'T',   label:'MODE 4/5 : <strong>AUDIO</strong>', value:'sur ON' },
+        { who:'T',   label:'<strong>ZERO/OUT/HOLD</strong>', value:'sur OUT' },
+        { who:'T',   label:'CFD : <strong>POWER</strong>', value:'sur OFF (bouton en position haute), cache rabattu' },
+        { who:'P',   label:'<strong>ALT2, TR2</strong>', value:'sur ON' },
+        { who:'P',   label:'<strong>HEATING BAT2</strong> (si OAT ≤ 0°C)', value:'sur OFF (ON)' },
+        { who:'P',   label:'<strong>PITOTS HEATING</strong>', value:'sur OFF' },
+        { who:'P',   label:'<strong>AVIONIC BAY COOLING</strong>', value:'sur NORM, cache rabattu' },
+        { who:'T',   label:'MDT', value:'en place, couvercle rabattu et verrouillé' },
+        { who:'P+T', label:'Sur le HMSCP : Potentiomètre luminosité', value:'en position medium' },
+        { who:'P+T', label:'Sur l\'AUDIO/HMS : <strong>NORM/ALT</strong>', value:'sur NORM' },
+        { type:'subheader', text:'PILOTE SEUL À BORD — Sécurité poste arrière' },
+        { who:'—',   label:'Harnais de sécurité', value:'attaché, ajusté' },
+        { who:'—',   label:'Équipements non fixés', value:'sécurisés' },
+        { who:'—',   label:'Fenêtre mauvais temps', value:'fermée' },
+        { who:'—',   label:'Sur le WCP : <strong>HEAT</strong>', value:'sur OFF' },
+        { who:'—',   label:'<strong>WIPE</strong>', value:'sur OFF' },
+        { who:'—',   label:'Sur le RMSCP : <strong>SIGHTING/STOWAGE</strong>', value:'sur STOWAGE' },
+        { who:'—',   label:'IR', value:'sur OFF' },
+        { who:'—',   label:'Clef laser', value:'absente' },
+        { who:'—',   label:'Sur l\'ECP : MET 1 et 2', value:'sur N' },
+        { who:'—',   label:'Sur les EEP : <strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur NORMAL, cache rabattu' },
+        { who:'—',   label:'Sur l\'ILC : <strong>LVL</strong>', value:'sur NOR' },
+        { who:'—',   label:'<strong>IL</strong>', value:'sur OFF' },
+        { who:'—',   label:'Sur la RCB-IFF <strong>MODE</strong>', value:'sur OFF' },
+        { who:'—',   label:'RMS flamme enlevée, robinet ouvert, pression > 50 bar', value:'' },
+        { who:'—',   label:'Appui front', value:'déposé et sécurisé dans la boîte de rangement droite' },
+        { who:'—',   label:'Porte', value:'fermée, verrouillée' },
+      ]
+    },
+    {
+      id: 'avdem',
+      label: 'AV DEM',
+      content: [
+        { type:'header', text:'AVANT DEMARRAGE DES MOTEURS' },
+        { who:'—',   label:'Alimentation auxiliaire (cas échéant)', value:'branché' },
+        { who:'P',   label:'<strong>BAT2</strong>', value:'sur ON' },
+        { who:'—',   label:'Attendre 10 s', value:'' },
+        { who:'P',   label:'<strong>BAT1</strong>', value:'sur ON' },
+        { who:'P',   label:'Vérifier l\'autotest ΔNg/Ng, l\'autocontrôle des ECMU et le Warning System', value:'' },
+        { who:'P+T', label:'Voyants <strong>STOP 1, STOP 2</strong> et <strong>SUP</strong>', value:'allumés' },
+        { who:'P',   label:'Horizon de secours', value:'cagé' },
+        { who:'P',   label:'<strong>RLG/NORM</strong>', value:'sur NORM' },
+        { who:'P/T', label:'Autotest AFCS (ACGPU/TIGRE)', value:'pas de GO NO' },
+        { who:'P/T', label:'Vérifier l\'initialisation du système de base', value:'' },
+        { who:'P/T', label:'Vérifier l\'état du système', value:'' },
+        { who:'P/T', label:'MFD page ELC — vérifier les tensions et la concordance', value:'' },
+        { who:'P/T', label:'MFD page FUE — vérifier les quantités de carburant', value:'' },
+        { who:'P/T', label:'Appuyer sur MASTER ALARM pour l\'éteindre', value:'' },
+        { who:'P',   label:'Frein de parking', value:'serré' },
+        { who:'P',   label:'Levier de frein rotor', value:'desserré, cache rabattu' },
+        { who:'P+T', label:'Phare d\'atterrissage', value:'sur OFF' },
+        { who:'P+T', label:'Éclairage intérieur', value:'réglé' },
+        { who:'P+T', label:'Test des voyants sur les boîtes de commandes', value:'testés' },
+        { type:'nota', text:'Mettre la RCB–25A sur STBY pour vérifier l\'allumage des voyants TEST. Après le test, la remettre sur OFF. Reconfigurer l\'XPDR à la page COM du CDU.' },
+        { who:'P+T', label:'Détection incendie', value:'testée' },
+        { who:'P+T', label:'Vérifier MGB.P / OIL.P1 / OIL.P2 / AUX.P / PITOT', value:'' },
+        { who:'P',   label:'Feu anti-collision', value:'à la demande' },
+        { who:'P',   label:'Feux de position', value:'à la demande' },
+        { who:'P',   label:'Sélecteur <strong>ACC.D/MAIN</strong> sur MAIN', value:'tous les voyants éteints' },
+        { who:'P',   label:'Débattement des commandes (HYD AUX) (ACGPU)', value:'' },
+        { who:'P',   label:'Tq/T45', value:'sur T45' },
+        { who:'P',   label:'Voyants "survitesse" secours', value:'vérifiés' },
+        { who:'P+T', label:'Voyants "survitesse" sur MFD', value:'vérifiés' },
+        { who:'P',   label:'Pages FUE et ENG', value:'affichées' },
+        { who:'T',   label:'OBTD CP', value:'à la demande' },
+      ]
+    },
+    {
+      id: 'dnorm',
+      label: 'D NORM',
+      content: [
+        { type:'header', text:'DEMARRAGE DU PREMIER MOTEUR' },
+        { type:'attention', text:'ARRETER LE MOTEUR SI : pas de rotation du rotor ou Nf à 30% de Ng suivant le démarrage ; stagnation du Ng (ΔNg/ΔT ≤ 0,5%/s) ou pas d\'allumage (temps de décision 25s) ; T45 supérieure à 750°C (800°C transitoire pendant 3s) ; START allumé Ng > 60% ; voyants O.SPEED allumés Nf > 85 tr/min.' },
+        { who:'—',   label:'Goupilles extérieures de largage des verrières', value:'enlevées' },
+        { who:'P+T', label:'Manche cyclique', value:'centré' },
+        { who:'P+T', label:'<strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur NORMAL, caches relevés' },
+        { type:'nota', text:'Sélectionner la position SLOW si la température de l\'huile moteurs et boîtes est ≤ 0°C.' },
+        { who:'P',   label:'Butée monomoteur', value:'sur INT' },
+        { who:'P',   label:'AP1 et AP2 (ACGPU/TIGRE)', value:'sur OFF' },
+        { who:'P',   label:'Top chrono', value:'' },
+        { who:'P',   label:'<strong>PUMP 1</strong> ou <strong>PUMP 2</strong>', value:'sur ON' },
+        { who:'P',   label:'Appuyer sur <strong>STOP</strong>', value:'START s\'allume' },
+        { who:'P',   label:'Vérifier Ng-T45 / NR-Nf / pressions / alarmes / flag O.SPEED', value:'à Nf 85 tr/min' },
+        { type:'header', text:'APRES LE DEMARRAGE DU PREMIER MOTEUR' },
+        { who:'P+T', label:'Vérifier l\'initialisation du système de base', value:'' },
+        { who:'P+T', label:'Vérifier l\'état du système', value:'' },
+        { who:'P+T', label:'Vérifier les quantités de carburant indiquées', value:'' },
+        { who:'P+T', label:'Vérifier OIL.P1 / OIL.P2 / PITOT', value:'' },
+        { who:'P+T', label:'Vérifier les paramètres de pressions et température', value:'' },
+        { who:'P',   label:'<strong>PUMP 1</strong> ou <strong>PUMP 2</strong>', value:'sur AUTO cache rabattu' },
+        { who:'T',   label:'OBTD CP interrupteurs et boutons', value:'à la demande' },
+        { who:'P',   label:'Si FAS installés', value:'sur ON' },
+        { who:'P',   label:'Sélection FAS', value:'à la demande' },
+        { who:'P',   label:'Si démarrage sur SLOW et T° > 10°C : passer sur FLIGHT — appuyer sur SLOW', value:'' },
+        { type:'header', text:'DEMARRAGE DU SECOND MOTEUR' },
+        { who:'—',   label:'Procéder comme pour le premier moteur avec le système de base', value:'' },
+        { type:'header', text:'APRES LE DEMARRAGE DES MOTEURS' },
+        { who:'P/T', label:'DATA-TRANSFER', value:'effectué' },
+        { type:'nota', text:'Après transfert DID, faire une activation de la fréquence STBY sur chaque V/UHF.' },
+        { who:'P/T', label:'Transpondeur', value:'sur STBY et configuré' },
+        { who:'P+T', label:'Page DO-LIST', value:'vérifiée' },
+        { who:'P+T', label:'Tous les voyants éteints (sauf PITOT)', value:'' },
+        { who:'P+T', label:'Sélecteur NORMAL/STOP/SHUT OFF', value:'caches rabattus' },
+        { who:'P+T', label:'Page A/C / ENG', value:'vérifiée' },
+        { who:'P',   label:'Test roue libre', value:'effectué' },
+        { who:'P+T', label:'Page A/C / ELC', value:'vérifiée' },
+        { who:'—',   label:'Faire débrancher le groupe de parc (si connecté)', value:'' },
+        { who:'P/T', label:'Vérifier voyant GPU', value:'éteint' },
+        { who:'P+T', label:'Page A/C / HYD', value:'vérifiée' },
+        { who:'P',   label:'Test hydraulique', value:'effectué' },
+        { who:'P+T', label:'Page A/C / ARM', value:'vérifiée' },
+        { who:'P+T', label:'Test connection/déconnection PA', value:'effectué' },
+        { who:'P',   label:'Test prévol de l\'AFCS (sandow enlevé)', value:'effectué' },
+        { who:'P',   label:'AFCS <strong>AP2</strong> puis <strong>AP1</strong>', value:'sur ON' },
+        { who:'P',   label:'Appuyer sur TRIM REL et TR pendant 3 à 5 s', value:'' },
+        { who:'P',   label:'Tests radios', value:'effectués' },
+        { who:'P+T', label:'HMSD/B', value:'aligné' },
+        { who:'P+T', label:'Test prévol système de dégivrage pare-brise', value:'' },
+        { who:'P+T', label:'Chauffage et ventilation de la cabine', value:'à la demande' },
+        { who:'T',   label:'CFD', value:'voyant éteint' },
+        { who:'P',   label:'Réchauffage <strong>PITOT</strong>', value:'sur ON' },
+        { who:'T',   label:'RMSCP IR', value:'à la demande' },
+      ]
+    },
+    {
+      id: 'clutch',
+      label: 'CLUTCH',
+      content: [
+        { type:'header', text:'MODE APU A PARTIR DU ROTOR A L\'ARRET' },
+        { who:'—',   label:'Goupilles de largage des verrières extérieures', value:'enlevées' },
+        { who:'—',   label:'Manche cyclique', value:'centré' },
+        { who:'—',   label:'<strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur NORMAL, caches relevés' },
+        { who:'—',   label:'Appuyer sur <strong>VALID</strong>', value:'' },
+        { who:'—',   label:'Vérifier VALID rond vert allumé / MAIN allumé / Ng Moteur 1 et 2 = 0', value:'' },
+        { who:'—',   label:'Passage de MAIN à ACC.D', value:'' },
+        { who:'—',   label:'Pendant la manœuvre : MAIN éteint / flèche verte clignote / ACC.D s\'allume', value:'' },
+        { who:'—',   label:'Sur MFD page ENG et TRN', value:'décraboté ambre, ACC.DR allumé' },
+        { who:'—',   label:'Sur le WP', value:'ACC.DR allumé' },
+        { who:'—',   label:'Frein rotor', value:'serré' },
+        { type:'nota', text:'Avec le frein rotor engagé, il est possible de démarrer le moteur 1 en mode APU mais il est impossible de démarrer le moteur 2 du fait de l\'existence d\'un contacteur de sécurité.' },
+        { type:'header', text:'PASSAGE DU MODE APU AU MODE VOL' },
+        { who:'—',   label:'Frein rotor : libre, sécurité en place, voyant éteint', value:'Nf moteur 1 = 328 tr/min / Nf moteur 2 = 0 tr/min' },
+        { who:'—',   label:'Sur AFCP : AP1 et AP2 confirmer OFF', value:'' },
+        { who:'—',   label:'Démarrer le moteur 2 en suivant la procédure normale', value:'' },
+        { type:'nota', text:'20s maximum entre le frein rotor desserré et le démarrage du moteur 2.' },
+        { who:'—',   label:'Vérifier Nf moteur 2 = 309 tr/min / VALID croix rouge allumée', value:'' },
+        { who:'—',   label:'Moteur 1 : appuyer sur SLOW', value:'' },
+        { who:'—',   label:'Vérifier Nf M1 = 268 / Nf M2 = 309 / VALID rond vert allumé', value:'' },
+        { who:'—',   label:'Passage de ACC.D à MAIN — vérifier MFD page TRN : craboté vert', value:'' },
+        { who:'—',   label:'Moteur 1 : engager FLIGHT', value:'' },
+        { who:'—',   label:'Appuyer sur VALID — vérifier VALID éteint, cache rabattu', value:'' },
+        { type:'header', text:'PASSAGE DU MODE VOL AU MODE APU' },
+        { who:'—',   label:'Sur AFCP : AP1 et AP2 confirmer OFF', value:'' },
+        { who:'—',   label:'Appuyer sur VALID — vérifier', value:'VALID croix rouge / Nf M1 = 328 / Nf M2 = 309 / MAIN allumé' },
+        { who:'—',   label:'Moteur 1 : appuyer sur SLOW', value:'' },
+        { who:'—',   label:'Passage de MAIN à ACC.D', value:'' },
+        { who:'—',   label:'Moteur 1 : engager FLIGHT', value:'' },
+        { who:'—',   label:'Butée monomoteur', value:'SUP présélectionnée' },
+        { who:'—',   label:'Arrêter le moteur 2 en suivant la procédure normale', value:'' },
+        { who:'—',   label:'NR < 160 tr/min, frein rotor', value:'serré' },
+        { type:'attention', text:'S\'ASSURER QU\'AUCUNE DES PALES NE SE TROUVE AU-DESSUS DU DEFLECTEUR DE JET DU MOTEUR 1 LORSQUE LE ROTOR EST A L\'ARRET.' },
+        { type:'header', text:'ARRET DU MODE APU' },
+        { who:'—',   label:'Arrêter le moteur 1 en suivant la procédure normale', value:'' },
+        { type:'attention', text:'APRES LE FONCTIONNEMENT DE L\'APU, ATTENDRE 1 min 30 s APRES Ng MOTEUR 1 ET 2 = 0, AVANT DE RECRABOTER.' },
+        { who:'—',   label:'Passage de ACC.D à MAIN', value:'' },
+        { who:'—',   label:'Appuyer sur VALID — vérifier VALID éteint, cache rabattu', value:'' },
+      ]
+    },
+    {
+      id: 'armot',
+      label: 'AR MOT',
+      content: [
+        { type:'header', text:'AVANT L\'ARRET DES MOTEURS' },
+        { type:'nota', text:'Sauf cas d\'urgence, avant l\'arrêt des moteurs, laisser stabiliser le régime moteur pendant 30 s en mode FLIGHT avec le collectif au plein petit pas. Ou bien, faire fonctionner le moteur en mode SLOW pendant au moins 30 s avant de l\'arrêter.' },
+        { type:'nota', text:'Avant chaque coupure moteur, dans le cas où la SUP n\'a pas été sélectionnée depuis le démarrage, sélectionner la SUP.' },
+        { who:'P',   label:'Roulette de queue', value:'voyants éteints' },
+        { who:'P',   label:'Frein de parking', value:'serré, voyant allumé' },
+        { who:'P+T', label:'Manche cyclique', value:'au neutre' },
+        { who:'—',   label:'AP2 et AP1', value:'sur OFF' },
+        { who:'—',   label:'Appuyer sur FTR ou mettre le trim au neutre', value:'' },
+        { who:'P',   label:'Manche collectif', value:'plein petit pas, sandow en place' },
+        { who:'P+T', label:'Butée monomoteur', value:'SUP présélectionnée' },
+        { who:'P+T', label:'Goupilles intérieures de largage des verrières', value:'en place' },
+        { who:'—',   label:'Groupe de parc alternatif branché', value:'à la demande' },
+        { who:'P+T', label:'Transfert DID-M', value:'effectué' },
+        { who:'P',   label:'Alarme AUDIO', value:'à la demande' },
+        { who:'P',   label:'Phare d\'atterrissage', value:'appuyer sur AUTORETRACT' },
+        { who:'P',   label:'Air conditionné', value:'sur OFF' },
+        { who:'P',   label:'Réchauffage Pitots', value:'sur OFF' },
+        { who:'T',   label:'RMS robinet fermé, goupille de sécurité en place', value:'' },
+        { who:'T',   label:'OBTD', value:'à la demande' },
+        { type:'header', text:'ARRET NORMAL DES MOTEURS' },
+        { who:'P',   label:'<strong>PUMP 1</strong> et <strong>PUMP 2</strong>', value:'sur OFF' },
+        { who:'P',   label:'1er moteur <strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur STOP' },
+        { who:'P',   label:'Si le moteur ne s\'arrête pas : <strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur SHUT OFF (arrêt 10 à 15s après)' },
+        { who:'P',   label:'Vérifier voyant <strong>STOP</strong>', value:'allumé' },
+        { who:'P',   label:'Si FAS installés sur arrêt', value:'voyants éteints' },
+        { who:'P+T', label:'Transfert <strong>DID-L</strong> (si GPU non branché)', value:'effectué' },
+        { who:'P',   label:'2nd moteur <strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur STOP' },
+        { who:'P',   label:'Si le moteur ne s\'arrête pas : <strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur SHUT OFF — voyant STOP allumé' },
+        { type:'header', text:'APRES L\'ARRET DES DEUX MOTEURS' },
+        { who:'P',   label:'NR < 160 tr/min, frein rotor', value:'serré (Temps d\'arrêt < 15 s)' },
+        { who:'P+T', label:'LVL', value:'à la demande' },
+        { who:'P+T', label:'UV, GR, INT', value:'à la demande' },
+        { who:'P+T', label:'<strong>IL</strong>', value:'sur OFF' },
+        { who:'P',   label:'Feux de position', value:'sur OFF' },
+        { who:'P',   label:'Feu anti-collision', value:'sur OFF' },
+        { who:'P+T', label:'Transfert <strong>DID G</strong> (si GPU branché)', value:'effectué' },
+        { who:'T',   label:'OBTD', value:'à la demande' },
+        { who:'P',   label:'<strong>BAT 1</strong> et <strong>BAT 2</strong>', value:'sur OFF' },
+        { who:'P+T', label:'Toutes les goupilles de sécurité', value:'en place' },
+        { who:'P',   label:'<strong>NORMAL/STOP/SHUT OFF</strong>', value:'sur SHUT OFF' },
+        { who:'P+T', label:'De nuit, vérifier croix centrale cyclique', value:'éteinte' },
+      ]
+    }
+  ]
+},
+
+// ── VOL AUX INSTRUMENTS ──────────────────────
+vi: {
+  title: 'VOL AUX INSTRUMENTS (VI)',
+  ref: 'JP-A-15-50-00-00F-135A-A · HADF · © Airbus Helicopters 2024',
+  color: '#00c9ff',
+  sections: [
+    {
+      id: 'avdec',
+      label: 'AV DÉC VI',
+      content: [
+        { type:'header', text:'VERIFICATIONS AVANT DECOLLAGE VI' },
+        { who:'P+T', label:'Harnais de sécurité', value:'verrouillés' },
+        { who:'P+T', label:'Butée monomoteur', value:'SUP présélectionnée' },
+        { who:'P',   label:'Frein de parking', value:'voyant éteint' },
+        { who:'P',   label:'Armer la roulette de queue pendant le roulage juste avant l\'arrêt', value:'TAIL WHL éteint' },
+        { who:'P',   label:'<strong>M/ARM</strong>', value:'à la demande' },
+        { who:'P',   label:'<strong>AFCS</strong>', value:'sur ON' },
+        { who:'P+T', label:'Altimètre (secours et MFD) ANGLO', value:'réglés et vérifiés' },
+        { who:'P+T', label:'Hauteur de décision 1 000 ft', value:'réglée et vérifiée' },
+        { who:'P',   label:'Horizon de secours', value:'vérifié' },
+        { who:'P+T', label:'Pressions et températures', value:'vérifiées' },
+        { who:'P+T', label:'Tous les voyants d\'alarme', value:'éteints' },
+        { who:'P',   label:'Système de chauffage', value:'sur OFF' },
+        { who:'P+T', label:'Canon', value:'relevé dans l\'axe' },
+        { type:'attention', text:'LE REBOOT DE LA TABLETTE NUMESIM TYPE GETAC_T800 DEMUNIE DE FILTRE PEUT CONDUIRE A UN EBLOUISSEMENT TEMPORAIRE DU TIREUR ET CREER DES REFLETS PARASITES POUR L\'EQUIPAGE LORS DES VOLS DE NUIT AVEC OU SANS LES SIL EN CONDITIONS VMC.' },
+      ]
+    },
+    {
+      id: 'aprclair',
+      label: 'APR CLAIR',
+      content: [
+        { type:'header', text:'VERIFICATIONS APRES CLEARANCE' },
+        { who:'T',   label:'Météorologie, minima', value:'annoncés' },
+        { who:'T',   label:'Clearance', value:'annoncée' },
+        { who:'P',   label:'MFD 1 ou 2', value:'COPY' },
+        { who:'P+T', label:'Radio navigation (lecture SID)', value:'moyens sélectionnés, vérifiés' },
+        { who:'P+T', label:'Altimètres (MFD, secours) ANGLO', value:'calages annoncés, réglés' },
+        { who:'P+T', label:'DA', value:'annoncée, réglée' },
+        { who:'P',   label:'DH 1000 ft', value:'annoncée, réglée' },
+        { who:'P/T', label:'IFF code affiché', value:'sur ON' },
+      ]
+    },
+    {
+      id: 'axe',
+      label: 'Axe / Stat',
+      content: [
+        { type:'header', text:'VERIFICATIONS SUR AXE DE PISTE' },
+        { who:'P',   label:'Cap', value:'précision sur axe' },
+        { who:'T',   label:'Lecture carton de décollage', value:'effectuée' },
+        { who:'T',   label:'IFF', value:'vérifié sur ON' },
+        { type:'header', text:'VOL STATIONNAIRE' },
+        { who:'P',   label:'Butée monomoteur', value:'sur SUP' },
+        { who:'P',   label:'Mise en stationnaire Mode vol (page ENG)', value:'vérifié' },
+        { who:'P+T', label:'Tous les voyants d\'alarme', value:'éteints' },
+        { who:'P',   label:'Roulette de queue', value:'voyants éteints' },
+        { who:'P',   label:'Instruments de secours', value:'vérifiés' },
+        { who:'P+T', label:'Pressions, températures et paramètres de vol', value:'corrects' },
+      ]
+    },
+    {
+      id: 'aprdec',
+      label: 'Après DEC',
+      content: [
+        { type:'header', text:'APRES DECOLLAGE (> 400 ft)' },
+        { who:'P+T', label:'Couplages', value:'annoncés, vérifiés' },
+        { who:'P+T', label:'Vitesse et taux de montée', value:'annoncés, vérifiés' },
+        { who:'P+T', label:'Pressions et températures, paramètres de vol', value:'corrects' },
+        { who:'P',   label:'<strong>M/ARM</strong>', value:'à la demande' },
+        { who:'P',   label:'Présélection butée monomoteur', value:'à la demande' },
+        { who:'T',   label:'<strong>SIGHTING/IR/HARMO</strong>', value:'à la demande' },
+        { who:'P',   label:'Phare d\'atterrissage', value:'sur OFF' },
+        { who:'P',   label:'Cohérence instruments de secours', value:'vérifiée' },
+      ]
+    },
+    {
+      id: 'croisiere',
+      label: 'Croisière',
+      content: [
+        { type:'header', text:'VERIFICATIONS EN CROISIERE' },
+        { who:'P',   label:'Puissance', value:'à la demande' },
+        { who:'P+T', label:'Altimètre (secours et MFD)', value:'corrélation PFD/Stby (anglo/métrique)' },
+        { who:'P+T', label:'Couplages, vitesse', value:'annoncés, vérifiés' },
+        { who:'P',   label:'Horizon de secours', value:'vérifié' },
+        { who:'P+T', label:'Paramètres moteur, VNE, T° ext', value:'vérifiés' },
+      ]
+    },
+    {
+      id: 'ptournant',
+      label: 'Pt tournant',
+      content: [
+        { type:'header', text:'VERIFICATIONS POINT TOURNANT' },
+        { who:'P+T', label:'Chrono', value:'déclenché' },
+        { who:'T',   label:'Contact radio', value:'effectué' },
+        { who:'T',   label:'Moyen radio navigation', value:'sélectionné' },
+        { who:'P+T', label:'Couplage et Navigation (HDG/NAV/RNAV)', value:'annoncés, vérifiés' },
+        { who:'P+T', label:'Prochaine estimée', value:'index chrono réglé' },
+        { who:'P+T', label:'Autonomie', value:'vérifiée' },
+      ]
+    },
+    {
+      id: 'avchgalt',
+      label: 'Av chgt alti',
+      content: [
+        { type:'header', text:'VERIFICATIONS AVANT CHANGEMENT D\'ALTITUDE' },
+        { who:'P+T', label:'Altimètres (secours et MFD)', value:'annoncés, réglés (ANGLO)' },
+        { who:'P',   label:'Niveau/altitude de stabilisation', value:'annoncés' },
+        { who:'P',   label:'Couplages', value:'annoncés' },
+        { who:'P',   label:'Vitesse et taux', value:'annoncés' },
+      ]
+    },
+    {
+      id: 'approche',
+      label: 'Approche',
+      content: [
+        { type:'header', text:'BRIEFING AVANT APPROCHE FINALE' },
+        { who:'T',   label:'Lecture carton atterrissage', value:'effectuée' },
+        { type:'attention', text:'LE REBOOT DE LA TABLETTE NUMESIM TYPE GETAC_T800 DEMUNIE DE FILTRE PEUT CONDUIRE A UN EBLOUISSEMENT TEMPORAIRE DU TIREUR ET CREER DES REFLETS PARASITES POUR L\'EQUIPAGE LORS DES VOLS DE NUIT AVEC OU SANS LES SIL EN CONDITIONS VMC.' },
+        { type:'header', text:'VERIFICATIONS AVANT APPROCHE FINALE' },
+        { who:'P+T', label:'Altimètre (secours et MFD)', value:'calages vérifiés (ANGLO)' },
+        { who:'P+T', label:'Cap', value:'concordance' },
+        { who:'P+T', label:'(M) DA / DH', value:'annoncées, affichées' },
+        { who:'P+T', label:'Index chrono', value:'affiché' },
+        { who:'P+T', label:'Moyens RNAV', value:'vérifiés' },
+        { type:'header', text:'AVANT ATTERRISSAGE' },
+        { who:'P',   label:'Phare d\'atterrissage', value:'à la demande' },
+        { who:'P',   label:'Butée monomoteur', value:'SUP' },
+        { who:'P',   label:'Frein de parking', value:'à la demande' },
+        { who:'P',   label:'Roulette de queue', value:'voyants éteints' },
+        { who:'P+T', label:'Système d\'armement', value:'désengagé' },
+        { who:'P',   label:'<strong>M/ARM</strong>', value:'à la demande' },
+        { who:'P+T', label:'Canon', value:'relevé dans l\'axe' },
+        { who:'T',   label:'CFD', value:'sur OFF' },
+        { who:'P',   label:'Chauffage', value:'sur OFF (MODE sur VEN pendant 10 s avant)' },
+      ]
+    },
+    {
+      id: 'remisegaz',
+      label: 'Remise de gaz',
+      content: [
+        { type:'header', text:'VERIFICATION APRES REMISE DE GAZ' },
+        { who:'P',   label:'Puissance', value:'SUP/PMC' },
+        { who:'T',   label:'Chrono', value:'déclenché' },
+        { who:'P+T', label:'Cap', value:'annoncé, vérifié' },
+        { who:'P+T', label:'Couplages', value:'annoncés, vérifiés' },
+        { who:'P+T', label:'Vitesse et taux de montée', value:'annoncés, vérifiés' },
+        { who:'P+T', label:'DH 1000 ft', value:'annoncée, réglée' },
+        { who:'P+T', label:'DA', value:'annoncée, réglée' },
+        { who:'P+T', label:'Pressions / températures (Secours et MFD)', value:'vérifiées' },
+        { who:'P',   label:'<strong>M/ARM</strong>', value:'à la demande' },
+        { who:'T',   label:'<strong>SIGHTING/IR/HARMO</strong>', value:'à la demande' },
+        { who:'P',   label:'Phare d\'atterrissage', value:'sur OFF' },
+        { who:'P',   label:'Cohérence instruments de secours', value:'vérifiée' },
+        { who:'T',   label:'IFF', value:'à la demande' },
+      ]
+    }
+  ]
+}
+
+}; // end DOCS
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentDoc = null;
+let currentSection = 0;
+let checkState = {}; // key: docId_sectionIdx_itemIdx
+
+function stateKey(itemIdx) {
+  return `${currentDoc}_${currentSection}_${itemIdx}`;
+}
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem('tigre_checks') || '{}'); } catch(e) { return {}; }
+}
+function saveState() {
+  try { localStorage.setItem('tigre_checks', JSON.stringify(checkState)); } catch(e) {}
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function openCombatMenu() {
+  document.getElementById('home').classList.add('slide-left');
+  document.getElementById('combat-menu').classList.remove('hidden');
+  document.documentElement.style.setProperty('--accent', '#ff4545');
+  // sync dark toggle
+  const isDark = document.documentElement.classList.contains('dark');
+  const el = document.getElementById('dt-combat');
+  if(el) el.textContent = isDark ? '☀️' : '🌙';
+}
+
+function openCombatSection(sectionId) {
+  currentDoc = 'combat';
+  checkState = loadState();
+  const doc = DOCS['combat'];
+
+  document.getElementById('doc-title').textContent = doc.title;
+  document.getElementById('doc-ref').textContent = doc.ref;
+  document.documentElement.style.setProperty('--accent', doc.color);
+
+  buildTabs(doc);
+  document.getElementById('section-tabs').style.display = 'none';
+
+  const idx = doc.sections.findIndex(s => s.id === sectionId);
+  currentSection = idx >= 0 ? idx : 0;
+  renderSection(currentSection);
+
+  document.getElementById('doc-back-label').textContent = 'Combat';
+  document.getElementById('doc-screen')._backTarget = 'combat-menu';
+
+  document.getElementById('combat-menu').classList.add('slide-left');
+  document.getElementById('doc-screen').classList.remove('hidden');
+
+  setTimeout(() => { document.getElementById('doc-content').scrollTop = 0; }, 50);
+}
+
+function openViMenu() {
+  document.getElementById('home').classList.add('slide-left');
+  document.getElementById('vi-menu').classList.remove('hidden');
+  document.documentElement.style.setProperty('--accent', '#00c9ff');
+}
+
+function openViSection(sectionId) {
+  currentDoc = 'vi';
+  checkState = loadState();
+  const doc = DOCS['vi'];
+
+  document.getElementById('doc-title').textContent = doc.title;
+  document.getElementById('doc-ref').textContent = doc.ref;
+  document.documentElement.style.setProperty('--accent', doc.color);
+
+  buildTabs(doc);
+
+  // Masquer la barre d'onglets — navigation via menu intermédiaire
+  document.getElementById('section-tabs').style.display = 'none';
+
+  // Trouver l'index de la section demandée
+  const idx = doc.sections.findIndex(s => s.id === sectionId);
+  currentSection = idx >= 0 ? idx : 0;
+  renderSection(currentSection);
+
+  // Bouton retour → VI menu
+  document.getElementById('doc-back-label').textContent = 'VI';
+  document.getElementById('doc-screen')._backTarget = 'vi-menu';
+
+  document.getElementById('vi-menu').classList.add('slide-left');
+  document.getElementById('doc-screen').classList.remove('hidden');
+
+  setTimeout(() => { document.getElementById('doc-content').scrollTop = 0; }, 50);
+}
+
+function docGoBack() {
+  const target = document.getElementById('doc-screen')._backTarget || 'home';
+  document.getElementById('doc-screen').classList.add('hidden');
+  if (target === 'vi-menu') {
+    document.getElementById('vi-menu').classList.remove('slide-left');
+    document.documentElement.style.setProperty('--accent', '#00c9ff');
+  } else if (target === 'combat-menu') {
+    document.getElementById('combat-menu').classList.remove('slide-left');
+    document.documentElement.style.setProperty('--accent', '#ff4545');
+  } else {
+    document.getElementById('home').classList.remove('slide-left');
+    document.documentElement.style.setProperty('--accent', '#3dff8a');
+  }
+}
+
+function goHome() {
+  document.getElementById('home').classList.remove('slide-left');
+  document.getElementById('vi-menu').classList.remove('slide-left');
+  document.getElementById('vi-menu').classList.add('hidden');
+  document.getElementById('combat-menu').classList.remove('slide-left');
+  document.getElementById('combat-menu').classList.add('hidden');
+  document.getElementById('doc-screen').classList.add('hidden');
+  document.documentElement.style.setProperty('--accent', '#3dff8a');
+}
+
+function openDoc(id) {
+  currentDoc = id;
+  currentSection = 0;
+  checkState = loadState();
+  const doc = DOCS[id];
+
+  document.getElementById('doc-title').textContent = doc.title;
+  document.getElementById('doc-ref').textContent = doc.ref;
+  document.documentElement.style.setProperty('--accent', doc.color);
+
+  buildTabs(doc);
+  renderSection(0);
+
+  // Bouton retour → Accueil
+  document.getElementById('doc-back-label').textContent = 'Accueil';
+  document.getElementById('doc-screen')._backTarget = 'home';
+
+  // Réafficher la barre d'onglets
+  document.getElementById('section-tabs').style.display = '';
+
+  const home = document.getElementById('home');
+  const screen = document.getElementById('doc-screen');
+  home.classList.add('slide-left');
+  screen.classList.remove('hidden');
+
+  setTimeout(() => { document.getElementById('doc-content').scrollTop = 0; }, 50);
+}
+
+// ══════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════
+function buildTabs(doc) {
+  const tabs = document.getElementById('section-tabs');
+  tabs.innerHTML = '';
+  doc.sections.forEach((sec, i) => {
+    const t = document.createElement('div');
+    t.className = 'stab' + (i === 0 ? ' active' : '');
+    t.textContent = sec.label;
+    t.onclick = () => switchSection(i);
+    tabs.appendChild(t);
+  });
+}
+
+function switchSection(idx) {
+  currentSection = idx;
+  const tabs = document.querySelectorAll('.stab');
+  tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+  renderSection(idx);
+  document.getElementById('doc-content').scrollTop = 0;
+}
+
+// ══════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════
+function renderSection(idx) {
+  const doc = DOCS[currentDoc];
+  const sec = doc.sections[idx];
+  const content = document.getElementById('doc-content');
+  content.innerHTML = '';
+
+  const block = document.createElement('div');
+  block.className = 'section-block active';
+
+  let checkIdx = 0;
+
+  sec.content.forEach(item => {
+    if (item.type === 'header') {
+      const h = document.createElement('div');
+      h.className = 'section-header';
+      h.textContent = item.text;
+      block.appendChild(h);
+    } else if (item.type === 'subheader') {
+      const h = document.createElement('div');
+      h.className = 'sub-section';
+      h.textContent = item.text;
+      block.appendChild(h);
+    } else if (item.type === 'attention') {
+      const box = document.createElement('div');
+      box.className = 'attention-box';
+      box.innerHTML = `<div class="box-label">⚠ ATTENTION</div><p>${item.text}</p>`;
+      block.appendChild(box);
+    } else if (item.type === 'nota') {
+      const box = document.createElement('div');
+      box.className = 'nota-box';
+      box.innerHTML = `<div class="box-label">NOTA</div><p>${item.text}</p>`;
+      block.appendChild(box);
+    } else {
+      // check item
+      const ci = document.createElement('div');
+      const key = `${currentDoc}_${idx}_${checkIdx}`;
+      const isDone = checkState[key];
+      ci.className = 'check-item' + (isDone ? ' done' : '');
+      ci.dataset.key = key;
+
+      const whoClass = item.who === 'P' ? 'p' : item.who === 'T' ? 't' : '';
+      const whoHtml = item.who && item.who !== '—'
+        ? `<div class="check-who ${whoClass}">${item.who}</div>`
+        : '';
+
+      ci.innerHTML = `
+        <div class="check-box"></div>
+        ${whoHtml}
+        <div class="check-body">
+          <div class="check-label">${item.label}</div>
+          ${item.value ? `<div class="check-value">${item.value}</div>` : ''}
+        </div>`;
+
+      ci.addEventListener('click', () => toggleCheck(ci, key));
+      block.appendChild(ci);
+      checkIdx++;
+    }
+  });
+
+  content.appendChild(block);
+  updateProgress(idx);
+}
+
+// ══════════════════════════════════════════
+// CHECK / PROGRESS
+// ══════════════════════════════════════════
+function toggleCheck(el, key) {
+  const done = !checkState[key];
+  checkState[key] = done;
+  el.classList.toggle('done', done);
+  saveState();
+  updateProgress(currentSection);
+}
+
+function updateProgress(sectionIdx) {
+  const doc = DOCS[currentDoc];
+  const sec = doc.sections[sectionIdx];
+  const items = sec.content.filter(i => !i.type);
+  const total = items.length;
+  let done = 0;
+  items.forEach((_, ii) => {
+    const key = `${currentDoc}_${sectionIdx}_${ii}`;
+    if (checkState[key]) done++;
+  });
+  document.getElementById('done-count').textContent = done;
+  document.getElementById('total-count').textContent = total;
+  document.getElementById('progress-fill').style.width = total > 0 ? `${(done/total)*100}%` : '0%';
+}
+
+function resetChecks() {
+  const doc = DOCS[currentDoc];
+  const sec = doc.sections[currentSection];
+  const items = sec.content.filter(i => !i.type);
+  items.forEach((_, ii) => {
+    const key = `${currentDoc}_${currentSection}_${ii}`;
+    delete checkState[key];
+  });
+  saveState();
+  renderSection(currentSection);
+}
+
+// ══════════════════════════════════════════
+// PROC URGENCE — NAVIGATION
+// ══════════════════════════════════════════
+let pHistory = [];
+
+function openProcMenu() {
+  document.getElementById('home').classList.add('slide-left');
+  document.getElementById('proc-screen').classList.remove('hidden');
+  pSetView('pViewHome');
+  pHistory = [];
+  document.getElementById('proc-back-label').textContent = 'Accueil';
+  document.getElementById('proc-header-title').textContent = 'PROCÉDURES URGENCE';
+  document.getElementById('proc-header-sub').textContent = 'URG / DEG / ARM · IETP21';
+}
+
+function pShowCat(cat) {
+  pHistory.push('pViewHome');
+  const names = { urg: 'URGENCES', deg: 'DÉGRADÉES', arm: 'ARMEMENT' };
+  pSetView('pView' + cat.charAt(0).toUpperCase() + cat.slice(1));
+  document.getElementById('proc-header-title').textContent = names[cat];
+  document.getElementById('proc-header-sub').textContent = 'Sélectionner un label';
+  document.getElementById('proc-back-label').textContent = 'Retour';
+}
+
+function pShowProc(id) {
+  const proc = PROCS[id];
+  if (!proc) return;
+  pHistory.push(document.querySelector('.proc-view.active').id);
+  const el = document.getElementById('pViewProc');
+  el.innerHTML = renderProc(proc);
+  el.scrollTop = 0;
+  pSetView('pViewProc');
+  document.getElementById('proc-header-title').textContent = proc.label;
+  document.getElementById('proc-header-sub').textContent = proc.cat;
+  document.getElementById('proc-back-label').textContent = 'Retour';
+}
+
+function procGoBack() {
+  const prev = pHistory.pop();
+  if (!prev) {
+    // Retour accueil
+    document.getElementById('home').classList.remove('slide-left');
+    document.getElementById('proc-screen').classList.add('hidden');
+    return;
+  }
+  pSetView(prev);
+  if (prev === 'pViewHome') {
+    document.getElementById('proc-header-title').textContent = 'PROCÉDURES URGENCE';
+    document.getElementById('proc-header-sub').textContent = 'URG / DEG / ARM · IETP21';
+    document.getElementById('proc-back-label').textContent = 'Accueil';
+  } else {
+    const catNames = { pViewUrg: 'URGENCES', pViewDeg: 'DÉGRADÉES', pViewArm: 'ARMEMENT' };
+    document.getElementById('proc-header-title').textContent = catNames[prev] || '';
+    document.getElementById('proc-header-sub').textContent = 'Sélectionner un label';
+    document.getElementById('proc-back-label').textContent = 'Retour';
+  }
+}
+
+function pSetView(id) {
+  document.querySelectorAll('.proc-view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function renderProc(proc) {
+  let html = `<div class="proc-title">${proc.label}</div>`;
+  html += `<div class="proc-category">${proc.cat}</div>`;
+  proc.blocks.forEach(b => {
+    html += `<div class="proc-block">`;
+    const labelText = b.label || proc.label;
+    const labelClass = b.labelClass || '';
+    html += `<div class="proc-block-label ${labelClass}">${labelText}</div>`;
+    b.content.forEach(item => {
+      if (item.type === 'step') {
+        if (item.right) {
+          html += `<div class="proc-step"><span class="proc-step-left">${item.text}</span><span class="proc-step-right">${item.right}</span></div>`;
+        } else {
+          html += `<div class="proc-step"><span class="proc-step-left">${item.text}</span></div>`;
+        }
+      } else if (item.type === 'danger' || item.type === 'attention') {
+        html += `<div class="proc-attention"><div class="proc-attention-title">ATTENTION</div>${item.text}</div>`;
+      } else if (item.type === 'nota') {
+        html += `<div class="proc-nota"><div class="proc-nota-title">NOTA</div>${item.text}</div>`;
+      } else if (item.type === 'conc_imm') {
+        html += `<div class="proc-conclusion atterrir-imm">ATTERRIR IMMÉDIATEMENT</div>`;
+      } else if (item.type === 'conc_poss') {
+        html += `<div class="proc-conclusion atterrir-poss">ATTERRIR DÈS QUE POSSIBLE</div>`;
+      } else if (item.type === 'conc_ecourter') {
+        html += `<div class="proc-conclusion ecourter">ÉCOURTER LE VOL</div>`;
+      } else if (item.type === 'conc_poursuivre') {
+        html += `<div class="proc-conclusion poursuivre">CONTINUER LE VOL</div>`;
+      } else if (item.type === 'cond') {
+        html += `<div class="proc-cond">${item.text}</div>`;
+      } else if (item.type === 'table') {
+        html += `<table class="proc-table">`;
+        item.rows.forEach(r => html += `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`);
+        html += `</table>`;
+      }
+    });
+    html += `</div>`;
+  });
+  return html;
+}
+
+// ══════════════════════════════════════════
+// DONNÉES PROCÉDURES URGENCE
+// ══════════════════════════════════════════
+const PROCS = {
+  feu_elec:{label:'FEU ÉLECTRIQUE',cat:'PANNE AÉRONEF (URG)',type:'urg',blocks:[{content:[{type:'attention',text:'NE PAS MAINTENIR ENCLENCHÉ UN DISJONCTEUR DÉCLENCHÉ AU RISQUE DE PROVOQUER UN INCENDIE.'},{type:'nota',text:'Un disjoncteur déclenché ne doit être ré-enclenché qu\'une fois.'},{type:'step',text:'Désigner un membre de l\'équipage pour lutter contre l\'incendie'},{type:'step',text:'Équipements concernés → sur arrêt'},{type:'step',text:'Disjoncteurs des circuits concernés → DÉCLENCHÉS'},{type:'cond',text:'Si le feu cesse :'},{type:'conc_poss',text:''},{type:'cond',text:'Si le feu persiste :'},{type:'step',text:'MASTER CUT-OFF → sur arrêt (vers le bas)'},{type:'conc_imm',text:''}]}]},
+  fumee:{label:'FUMÉE DANS LA CABINE',cat:'PANNE AÉRONEF (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Régler VENT → sur LO ou HI'},{type:'step',text:'Régler MODE → sur VEN'},{type:'cond',text:'Si l\'origine de la fumée est identifiée :'},{type:'step',text:'Désactiver le circuit concerné — tirer les breakers des circuits associés'},{type:'cond',text:'Sinon :'},{type:'step',text:'EMERGENCY CUT-OFF (ECO1 et ECO2) → sur arrêt (vers le bas)'},{type:'conc_poss',text:''},{type:'step',text:'Ouvrir les fenêtres mauvais temps si nécessaire'}]}]},
+  foudroiement_direct:{label:'FOUDROIEMENT DIRECT',cat:'PANNE AÉRONEF (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Adapter une vitesse < 120 kt en palier (puissance < PMC)'},{type:'step',text:'Réinitialiser l\'AFCS en appuyant sur AP2 et AP1 si nécessaire'},{type:'nota',text:'Le phare d\'atterrissage en position DIM peut être coupé. Agir sur la commande OFF/MAX/DIM du manche collectif pour retrouver l\'éclairage. Si réglage non adapté : réinitialiser le DEU (disjoncteur DEU) dans chaque cabine, uniquement en conditions sûres.'}]}]},
+  foudroiement_indirect:{label:'FOUDROIEMENT INDIRECT',cat:'PANNE AÉRONEF (URG)',type:'urg',blocks:[{content:[{type:'nota',text:'Appliquer cette procédure uniquement en conditions sûres. Réinitialiser le DEU (disjoncteur) dans chaque cabine dans le mode sélectionné au panneau de commandes. Le phare DIM peut être coupé : agir sur OFF/MAX/DIM du manche collectif.'}]}]},
+  vent:{label:'VENT.T',cat:'PANNE AÉRONEF (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Ne pas rester en stationnaire plus de 5 min'},{type:'step',text:'Changer d\'attitude et de cap avant 3 min'},{type:'cond',text:'Si la panne persiste :'},{type:'step',text:'Le capteur est défectueux — éviter le vol stationnaire avec vent arrière gauche pendant plus de 3 min'}]}]},
+  trim_release:{label:'PANNE TRIM RELEASE',cat:'PANNE AÉRONEF (URG)',type:'urg',blocks:[{label:'PANNE VÉRIN COMPENSATION (AP1-AP2 DÉSENGAGÉS)',labelClass:'warn',content:[{type:'step',text:'Utiliser le bouton TRIM RELEASE de la commande concernée pour diminuer les efforts'},{type:'step',text:'Si nécessaire, répéter depuis l\'autre cockpit'},{type:'conc_poursuivre',text:''}]},{label:'PANNE DE TRIM RELEASE',labelClass:'warn',content:[{type:'step',text:'Utiliser le "Beep trim" pour diminuer les efforts'}]}]},
+  dem_manuel:{label:'DÉMARRAGE MANUEL',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{label:'AVANT DÉMARRAGE',labelClass:'warn',content:[{type:'attention',text:'Avec groupe parc alternatif ou autre Tigre : fortement recommandé de NE PAS démarrer le premier moteur en mode manuel. Vérifier pas collectif en position basse, pompe hydraulique auxiliaire si nécessaire.'},{type:'attention',text:'Démarrage sur batteries ou groupe parc continu : démarrage manuel du premier moteur INTERDIT.'},{type:'attention',text:'DANS TOUS LES CAS : ne pas effectuer de démarrage manuel tant que Ng > 8%.'},{type:'step',text:'Sur l\'ECP-P : voyant STOP 1 ou 2 allumé'},{type:'step',text:'Pas collectif : position basse, sandow en place'},{type:'step',text:'MET : en butée arrière (position démarrage) — MAN clignote'},{type:'step',text:'Vérifier MAN fixe — GOV rouge allumé'},{type:'step',text:'PUMP 1 ou PUMP 2 → sur ON'},{type:'step',text:'(P) Levier de frein rotor desserré, cache rabattu'}]},{label:'DÉMARRAGE',labelClass:'warn',content:[{type:'attention',text:'Si T > 750°C (800°C transitoire pendant 3s) : ramener MET en butée arrière et placer sélecteur sur STOP.'},{type:'attention',text:'Si voyant survitesse Ng reste allumé après démarrage : arrêter moteur(s), BAT sur OFF puis ON, recommencer.'},{type:'step',text:'(P) Déclencher le chronomètre'},{type:'step',text:'Sur la MET : appuyer et maintenir bouton démarreur — voyant START allumé'},{type:'step',text:'Observer la progression de Ng'},{type:'step',text:'Ng = 10% → déplacer la MET vers l\'avant'},{type:'step',text:'600°C < T45 < 750°C'},{type:'step',text:'Ng = 55% → relâcher le bouton démarreur — START s\'éteint'},{type:'step',text:'Déplacer la MET vers l\'avant à la demande'},{type:'nota',text:'Le démarrage doit intervenir dans les 45 s.'},{type:'step',text:'Au régime nominal : sélecteur PUMP 1 ou PUMP 2 → sur AUTO, cache rabattu'}]},{label:'CAS D\'ARRÊT D\'URGENCE DES MOTEURS',content:[{type:'step',text:'Pompage d\'un moteur'},{type:'step',text:'T45 élevée pendant le démarrage'},{type:'step',text:'Niveau du son inacceptable'},{type:'step',text:'Panne ECMU majeur et/ou panne commande manuelle'},{type:'step',text:'Alarme basse pression d\'huile'},{type:'step',text:'Feu'},{type:'step',text:'Vibrations'}]}]},
+  arret_urgence:{label:'ARRÊT D\'URGENCE MOTEURS',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{label:'AU COURS D\'UN DÉMARRAGE AUTOMATIQUE',content:[{type:'step',text:'NORM/STOP/SHUT OFF → sur STOP'},{type:'step',text:'Vérifier voyant STOP allumé'},{type:'cond',text:'Si le moteur ne s\'arrête pas :'},{type:'step',text:'NORM/STOP/SHUT OFF → sur SHUT OFF'}]},{label:'AU COURS D\'UN DÉMARRAGE MANUEL',content:[{type:'step',text:'Ramener la MET en butée arrière — relâcher si nécessaire le bouton de démarrage secours'},{type:'step',text:'NORM/STOP/SHUT OFF → sur STOP'},{type:'cond',text:'Si le moteur ne s\'arrête pas :'},{type:'step',text:'NORM/STOP/SHUT OFF → sur SHUT OFF'}]},{label:'EN VOL',labelClass:'warn',content:[{type:'step',text:'Établir les conditions de vol OEI'},{type:'step',text:'NORM/STOP/SHUT OFF → sur STOP'},{type:'step',text:'Vérifier voyant STOP allumé'},{type:'cond',text:'Si le moteur ne s\'arrête pas :'},{type:'step',text:'NORM/STOP/SHUT OFF → sur SHUT OFF'},{type:'step',text:'Pompe du moteur concerné → sur OFF'}]}]},
+  redem:{label:'REDÉMARRAGE APRÈS ARRÊT URG',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{label:'AU SOL',labelClass:'warn',content:[{type:'cond',text:'Coupure à Ng < 85% :'},{type:'step',text:'Ventilation sèche — attendre 5 min avant redémarrage'},{type:'cond',text:'Coupure à 85% < Ng < PMC :'},{type:'step',text:'Ventilation sèche à 3 min, puis à 8 min — attendre 3 min supplémentaires'},{type:'cond',text:'Coupure à Ng > PMC :'},{type:'step',text:'Ventilation sèche après 3 min — attendre 2 heures avant redémarrage'}]},{label:'EN VOL',labelClass:'warn',content:[{type:'attention',text:'Pour éviter de dépasser les limites de température sur le moteur restant : couper le système de chauffage.'},{type:'step',text:'Confirmer l\'arrêt du moteur : NORM/STOP/SHUT OFF → sur STOP'},{type:'step',text:'Vérifier : Ng inférieur à 8%'},{type:'step',text:'Suivre la procédure de démarrage normal'}]}]},
+  panne_moteur_vol:{label:'PANNE MOTEUR EN VOL / H/V',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{label:'EN VOL BASSE ALT, BASSE Vi, CROISIÈRE, DÉCOLLAGE/ATTERRISSAGE HORS H/V',content:[{type:'step',text:'Pas collectif : maintenir NR à l\'intérieur des limites (alarme sonore si nécessaire)'},{type:'step',text:'Moteur en panne : passer sur SLOW, puis couper'},{type:'step',text:'VNE : respecter la VNE OEI'},{type:'conc_ecourter',text:''},{type:'cond',text:'Si combinaison altitude/masse/Vi ne permet pas de poursuivre le vol :'},{type:'step',text:'Emports largués dans une zone favorable'},{type:'cond',text:'Si la poursuite du vol n\'est toujours pas possible :'},{type:'conc_poss',text:''}]}]},
+  fire1_2:{label:'FIRE 1 / FIRE 2',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{label:'EN VOL STATIONNAIRE',labelClass:'warn',content:[{type:'conc_imm',text:''},{type:'step',text:'Appliquer la procédure EN VOL'}]},{label:'EN VOL',labelClass:'warn',content:[{type:'step',text:'Établir les conditions de vol OEI'},{type:'step',text:'Prendre une Vi < 100 kt (75 kt recommandé)'},{type:'step',text:'Sur le moteur concerné, simultanément :'},{type:'step',text:'NORM/STOP/SHUT OFF de l\'EEP1 (ou 2) → sur SHUT OFF'},{type:'step',text:'PUMP 1 (ou PUMP 2) → sur OFF'},{type:'step',text:'Interrupteur VENT → sur OFF'},{type:'step',text:'Visualiser la page ENG du MFD'},{type:'step',text:'Ng1 ≤ 20% → appuyer sur SHOT 1 de l\'EEP1 (ou 2)'},{type:'nota',text:'SHOT 1 éteint indique que la bouteille est vide.'},{type:'cond',text:'Si le voyant FIRE ne s\'éteint pas après 1 min :'},{type:'step',text:'Appuyer sur SHOT 2 de l\'EEP1 (ou 2)'},{type:'conc_poss',text:''},{type:'cond',text:'Si le voyant FIRE ne s\'éteint pas après 1 min supplémentaire :'},{type:'conc_imm',text:''}]}]},
+  fire_detect:{label:'PANNE DÉTECTION INCENDIE + ALARME',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Adapter une trajectoire de sécurité'},{type:'step',text:'Confirmer et surveiller l\'évolution des paramètres moteur'},{type:'cond',text:'Si les paramètres sont normaux :'},{type:'conc_ecourter',text:''},{type:'cond',text:'Sinon :'},{type:'step',text:'Appliquer la procédure FIRE'}]}]},
+  gov1_et_gov2:{label:'GOV 1 ET GOV 2 — EN VOL',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'danger',text:'Surveiller Ng et T45 pour déceler tout départ en survitesse nécessitant la coupure du moteur via "STOP" de l\'EEP. L\'ECP bascule automatiquement en mode MAN.'},{type:'attention',text:'PROCÉDURE INTERDITE EN ENTRAÎNEMENT EN VOL.'}]},{label:'EN VOL',labelClass:'warn',content:[{type:'step',text:'Confirmer l\'allumage des deux boutons-poussoirs MAN'},{type:'conc_ecourter',text:''},{type:'step',text:'Retrouver les conditions de vol : Vi 100 kt — NR environ 330 tr/min'},{type:'cond',text:'Panne avec forte puissance :'},{type:'step',text:'Appliquer alternativement des corrections modérées de pas collectif et de MET'},{type:'step',text:'Ajuster les NR à l\'aide des manettes secours moteur si nécessaire (plage Ng ≥ 65%)'},{type:'cond',text:'Panne avec faible puissance :'},{type:'step',text:'Appliquer principalement des corrections de pas collectif'},{type:'cond',text:'Approche et atterrissage :'},{type:'step',text:'Variation de vitesse en palier avec prudence, de 100 kt vers 70 kt'},{type:'step',text:'Prendre une trajectoire d\'approche de sécurité'},{type:'step',text:'Débuter la descente uniquement avec le pas collectif : Vi 70 kt — Vz 300 ft/min'},{type:'step',text:'Poursuivre l\'approche en réduisant prudemment la vitesse'},{type:'step',text:'Après toucher : ajuster NR — couper les deux moteurs à l\'aide des SHUT OFF'}]},{label:'EN STATIONNAIRE DANS L\'EFFET DE SOL',content:[{type:'attention',text:'PROCÉDURE INTERDITE EN ENTRAÎNEMENT EN VOL.'},{type:'step',text:'Confirmer l\'allumage des deux boutons-poussoirs MAN'},{type:'conc_ecourter',text:''},{type:'step',text:'Contrôler la hauteur et les NR à l\'aide du pas collectif'},{type:'step',text:'Descendre prudemment jusqu\'à l\'atterrissage'},{type:'step',text:'Au sol, appareil contrôlé : couper les deux moteurs à l\'aide des SHUT OFF'}]}]},
+  ospd:{label:'OSPD 1 / OSPD 2',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'attention',text:'NE PAS REDÉMARRER LE MOTEUR EN PANNE.'},{type:'step',text:'Ajuster le pas collectif pour maintenir le régime nominal du rotor'},{type:'step',text:'Confirmer l\'arrêt automatique sur le moteur concerné'},{type:'step',text:'Appliquer la procédure panne sur un moteur'},{type:'conc_ecourter',text:''}]}]},
+  pwr:{label:'PWR',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Ajuster le pas collectif pour maintenir le régime du rotor'},{type:'step',text:'Établir les conditions OEI'},{type:'step',text:'Sélectionner la puissance exigée'},{type:'step',text:'Vérifier sur la page AC/ENG du MFD si le ré-allumage automatique est en cours'},{type:'cond',text:'Si non, si la panne est confirmée :'},{type:'step',text:'Appliquer la procédure panne sur un moteur'},{type:'conc_ecourter',text:''}]}]},
+  oilp:{label:'OILP 1 / OILP 2',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Confirmer sur la page ENG du MFD'},{type:'cond',text:'PRESSION BASSE :'},{type:'step',text:'Couper le moteur immédiatement'},{type:'conc_ecourter',text:''},{type:'cond',text:'PRESSION NORMALE :'},{type:'conc_poursuivre',text:''},{type:'step',text:'Surveiller la pression d\'huile et le couple'}]}]},
+  oilp_sol:{label:'GOV 1 et GOV 2 — AU SOL',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'cond',text:'Pendant démarrage, 10 s après appui sur START (1re tentative) :'},{type:'step',text:'Couper les moteurs démarrés — BAT2 et BAT1 sur OFF'},{type:'step',text:'RECOMMENCER LE DÉMARRAGE DES MOTEURS'},{type:'cond',text:'Pendant démarrage, 10 s après START (2e tentative) :'},{type:'step',text:'Couper les moteurs démarrés — BAT2 et BAT1 sur OFF'},{type:'step',text:'ANNULER LA MISSION'},{type:'cond',text:'PROCÉDURE EN VOL :'},{type:'step',text:'Sélectionner le régime INT'},{type:'step',text:'Page ENG sur MFD — surveiller les paramètres moteurs'},{type:'step',text:'Ne pas dépasser les limitations de la MCP'},{type:'conc_ecourter',text:''}]}]},
+  oilp_bas:{label:'OILP — PRESSION BASSE/HAUTE',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Sélectionner la page ENG sur le MFD pour confirmation'},{type:'cond',text:'AU-DESSOUS DE 2,5 bar :'},{type:'step',text:'Surveiller la pression d\'huile et le couple'},{type:'conc_ecourter',text:''},{type:'cond',text:'AU-DESSUS DE 6 bar :'},{type:'step',text:'Réduire la puissance'},{type:'cond',text:'Si la pression reste excessive :'},{type:'step',text:'Arrêter le moteur concerné'},{type:'conc_ecourter',text:''}]}]},
+  oilt:{label:'OILT 1 / OILT 2',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{label:'OILT 1 OU OILT 2',labelClass:'warn',content:[{type:'step',text:'Sélectionner la page ENG sur le MFD pour confirmation'},{type:'cond',text:'SI LA TEMPÉRATURE < 0°C :'},{type:'step',text:'Attendre que la température dépasse la limite pour utiliser la puissance'},{type:'cond',text:'SI LA TEMPÉRATURE > 110°C :'},{type:'step',text:'Réduire la puissance — si nécessaire, sélectionner SLOW'},{type:'cond',text:'Si la température reste anormale :'},{type:'step',text:'Arrêter le moteur concerné'},{type:'conc_ecourter',text:''}]},{label:'OILT 1 ET OILT 2',labelClass:'warn',content:[{type:'step',text:'Sélectionner la page ENG sur le MFD pour confirmer la panne'},{type:'cond',text:'EN VOL, SI TEMPÉRATURE > 110°C :'},{type:'step',text:'Réduire la puissance'},{type:'table',rows:[['Si température ne diminue pas','ATTERRIR DÈS QUE POSSIBLE'],['Si température diminue','POURSUIVRE LE VOL']]}]}]},
+  oil_filt:{label:'OIL FILT',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Sélectionner la page ENG sur le MFD'},{type:'cond',text:'Si température et/ou pression d\'huile anormales :'},{type:'step',text:'Couper le moteur concerné'},{type:'conc_ecourter',text:''}]}]},
+  eng_chip:{label:'ENG CHIP',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Sélectionner la page ENG sur le MFD pour identifier le moteur en panne'},{type:'step',text:'Sélectionner SLOW du moteur en panne'},{type:'step',text:'Vérifier les paramètres moteurs'},{type:'step',text:'Couper le moteur si anomalie'},{type:'conc_ecourter',text:''}]}]},
+  bat_t:{label:'BAT T1 / BAT T2',cat:'PANNE ÉLECTRIQUE (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Interrupteur BAT 1 ou BAT 2 → sur OFF'},{type:'step',text:'Sélectionner la page ELC sur le MFD pour confirmer la température batterie'},{type:'cond',text:'Si température trop haute confirmée :'},{type:'step',text:'Laisser interrupteur BAT 1 ou BAT 2 sur OFF'},{type:'conc_poss',text:''},{type:'step',text:'Déconnecter la batterie concernée'},{type:'step',text:'Laisser la porte du compartiment batteries ouverte'}]}]},
+  rot_bk:{label:'ROT.BK',cat:'PANNE TRANSMISSION (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Sélectionner la page TRN sur le MFD pour confirmation'},{type:'cond',text:'Manette en position "frein rotor serré" :'},{type:'step',text:'Desserrer le frein rotor'},{type:'conc_poss',text:''},{type:'step',text:'Au sol : arrêter les moteurs — ne pas actionner le frein rotor'},{type:'cond',text:'Manette en position "frein rotor desserré" :'},{type:'conc_poss',text:''}]}]},
+  mgb_p_urg:{label:'MGB.P',cat:'PANNE TRANSMISSION (URG)',type:'urg',blocks:[{label:'MGB.P + MGB.P (double)',labelClass:'warn',content:[{type:'step',text:'Sélectionner la page TRN sur le MFD pour confirmer la pression'},{type:'conc_poss',text:''}]},{label:'MGB.P (simple)',labelClass:'warn',content:[{type:'step',text:'Sélectionner la page TRN sur le MFD pour confirmer la pression d\'huile'},{type:'step',text:'Surveiller la pression et la température d\'huile'},{type:'table',rows:[['Si température normale','ÉCOURTER LE VOL'],['Si température anormale','Appliquer la procédure MGB T']]}]}]},
+  mgb_t:{label:'MGB.T',cat:'PANNE TRANSMISSION (URG)',type:'urg',blocks:[{content:[{type:'cond',text:'SI TEMPÉRATURE > 120°C :'},{type:'step',text:'Sélectionner la page TRN pour identifier le problème'},{type:'step',text:'En vol stationnaire → effectuer un vol à Vy'},{type:'table',rows:[['Si température reste excessive','ATTERRIR DÈS QUE POSSIBLE'],['Si température chute sous la limite','POURSUIVRE LE VOL']]},{type:'cond',text:'SI TEMPÉRATURE < -30°C :'},{type:'step',text:'Attendre que la température augmente au-delà de la limite pour appliquer de la puissance'}]}]},
+  igb_t:{label:'IGB.T',cat:'PANNE TRANSMISSION (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Sélectionner la page TRN sur le MFD pour confirmation'},{type:'step',text:'En vol stationnaire → effectuer un vol à Vy'},{type:'table',rows:[['Si température reste excessive','ATTERRIR DÈS QUE POSSIBLE'],['Si température chute sous la limite','POURSUIVRE LE VOL']]}]}]},
+  tgb_t:{label:'TGB.T',cat:'PANNE TRANSMISSION (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Sélectionner la page TRN sur le MFD pour confirmation'},{type:'step',text:'En vol stationnaire → effectuer un vol à Vy'},{type:'table',rows:[['Si température reste excessive','ATTERRIR DÈS QUE POSSIBLE'],['Si température chute sous la limite','POURSUIVRE LE VOL']]}]}]},
+  gb_chip:{label:'GB.CHIP',cat:'PANNE TRANSMISSION (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Sélectionner la page TRN sur le MFD pour confirmation'},{type:'table',rows:[['Flag ACC.DR','POURSUIVRE LE VOL'],['Flag MGB, IGB ou TGB','ÉCOURTER LE VOL']]}]}]},
+  hyd:{label:'HYD 1 / HYD 2',cat:'PANNE HYDRAULIQUE (URG)',type:'urg',blocks:[{content:[{type:'attention',text:'En cas de panne hydraulique sur un système avec force anormale dans les commandes de vol : ATTERRIR DÈS QUE POSSIBLE.'},{type:'cond',text:'PRESSION BASSE OU NULLE :'},{type:'step',text:'Page HYD sur MFD pour identifier le problème'},{type:'step',text:'Éviter les manœuvres brutales'},{type:'conc_poss',text:''},{type:'cond',text:'PRESSION ÉLEVÉE :'},{type:'step',text:'Page HYD sur MFD — Éviter les manœuvres brutales'},{type:'conc_ecourter',text:''},{type:'cond',text:'BAS NIVEAU HYDRAULIQUE :'},{type:'step',text:'Page HYD sur MFD — Éviter les manœuvres brutales'},{type:'conc_poss',text:''},{type:'cond',text:'TEMPÉRATURE ÉLEVÉE :'},{type:'step',text:'Page HYD sur MFD — Éviter les manœuvres brutales'},{type:'conc_ecourter',text:''}]}]},
+  att_dis:{label:'ATT DIS',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Mains sur les commandes'},{type:'cond',text:'Si aucune reconfiguration automatique :'},{type:'step',text:'Sélectionner SD1 en simplex pour comparer le PFD avec l\'horizon de secours'},{type:'step',text:'Sélectionner SD2 en simplex pour comparer le PFD avec l\'horizon de secours'},{type:'step',text:'Sélectionner SD1 ou SD2 en simplex sur le CDU en conséquence'},{type:'conc_poursuivre',text:''}]}]},
+  afcs_reset:{label:'AFCS — RÉINITIALISATION',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Garder les mains sur les commandes'},{type:'step',text:'Réinitialiser l\'AFCS en appuyant sur AP2 et AP1'},{type:'conc_poursuivre',text:''}]}]},
+  afcs_axe:{label:'AFCS — AXE / FONCTION',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Garder les mains sur les commandes'},{type:'step',text:'Réengager les axes ou les fonctions concernés'},{type:'step',text:'OU réinitialiser l\'AFCS (AP2 puis AP1) puis tenter de réengager'},{type:'conc_poursuivre',text:''}]}]},
+  bcsg:{label:'BCSG',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{label:'DÉFAILLANCE CONTRÔLEUR DE BUS OU GÉNÉRATEUR DE SYMBOLES',labelClass:'warn',content:[{type:'step',text:'Utiliser momentanément les instruments de secours et les panneaux d\'alarme'},{type:'step',text:'Si nécessaire, appuyer sur BAS au CDU pour reconfigurer manuellement les BCSG'},{type:'attention',text:'NE PAS TENTER UNE RECONFIGURATION MANUELLE BCSG, SAUF IMPÉRATIF MISSION.'},{type:'nota',text:'Après une reconfiguration manuelle, une reconfiguration automatique n\'est plus possible.'}]},{label:'PERTE D\'UN MFD',content:[{type:'step',text:'Sélectionner B/UP sur le MFD défectueux'}]}]},
+  ecas:{label:'ECAS',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'nota',text:'Les alarmes NR mini et max sont encore disponibles via le klaxon cockpit.'},{type:'conc_ecourter',text:''}]}]},
+  hdg_dis:{label:'HDG DIS',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Utiliser le compas de secours pour identifier l\'erreur de cap SD1/SD2'}]}]},
+  ptmu:{label:'PTMU',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'cond',text:'Panne PTMU 1 OU PTMU 2 :'},{type:'step',text:'Sélectionner la page PFD pour identifier le problème'},{type:'conc_poursuivre',text:''},{type:'cond',text:'Panne PTMU 1 ET PTMU 2 :'},{type:'step',text:'Sélectionner la page PFD pour identifier le problème'},{type:'step',text:'Utiliser les instruments de secours'},{type:'conc_poursuivre',text:''}]}]},
+  ptmu_dis:{label:'PTMU DIS',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Effectuer une vérification croisée avec les instruments de secours'}]}]},
+  rtu:{label:'RTU 1 / RTU 2',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Effectuer un contrôle croisé avec les instruments de secours'}]}]},
+  sd_dis:{label:'SD DIS',cat:'PANNE AÉRONEF (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner SD1 ou SD2 en simplex sur le CDU'},{type:'step',text:'Comparer le cap magnétique avec l\'instrument de secours'},{type:'step',text:'Comparer l\'attitude avec l\'horizon de secours'},{type:'step',text:'Déterminer l\'origine de l\'écart'},{type:'conc_poursuivre',text:''}]}]},
+  gov_deg:{label:'GOV 1 / GOV 2 + MAN',cat:'PANNE MOTEUR (DEG)',type:'deg',blocks:[{content:[{type:'danger',text:'Lors de la panne GOV1 OU GOV2, surveiller Ng et T45 pour déceler tout départ en survitesse.'},{type:'attention',text:'DÉSÉLECTIONNER MAN GÈLERA LE DOSEUR CARBURANT.'},{type:'step',text:'Sur le moteur concerné : vérifier MAN allumé'},{type:'step',text:'PMI indisponible — surveiller les paramètres moteurs'},{type:'step',text:'Réguler la puissance à l\'aide du pas collectif'},{type:'step',text:'Aligner les couples'},{type:'step',text:'Éviter les manœuvres agressives'},{type:'conc_ecourter',text:''},{type:'cond',text:'Procédure d\'atterrissage :'},{type:'step',text:'Survoler la zone de poser à 1000 ft — Vi de 100 kt'},{type:'step',text:'Effectuer une approche plate — atterrir'},{type:'step',text:'Au posé : couper le moteur en panne puis effectuer le roulage'}]}]},
+  eng_dis:{label:'ENG DIS',cat:'PANNE MOTEUR (DEG)',type:'deg',blocks:[{content:[{type:'cond',text:'ÉCART DONNÉES ANALOGIQUES / ARINC > 5 s :'},{type:'step',text:'Page ENG sur MFD — observer les paramètres'},{type:'step',text:'Confirmer les données avec les instruments de secours'},{type:'conc_poursuivre',text:''}]}]},
+  fire_d_deg:{label:'FIRE D + FAIL',cat:'PANNE MOTEUR (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Appuyer sur FIRE du côté concerné pour tester la fonctionnalité extinction'},{type:'table',rows:[['Si le test incendie est satisfaisant','POURSUIVRE LE VOL'],['Si le test incendie n\'est pas satisfaisant','ÉCOURTER LE VOL']]}]}]},
+  ospeed_deg:{label:'OSPEED',cat:'PANNE MOTEUR (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner la page ENG sur le MFD et surveiller les paramètres moteurs'},{type:'conc_ecourter',text:''}]}]},
+  sand:{label:'SAND',cat:'PANNE MOTEUR (DEG)',type:'deg',blocks:[{content:[{type:'table',rows:[['Rester hors des zones sablonneuses','POURSUIVRE LE VOL'],['Si impossibilité de quitter les zones sablonneuses','ÉCOURTER LE VOL']]}]}]},
+  engine_lem:{label:'ENGINE 1 / ENGINE 2 — LEM',cat:'PANNE MOTEUR (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Couper le moteur 1 ou 2 en priorité pour charger les données ECMU dans le DID'},{type:'step',text:'Vérifier l\'ECP et la page SYS du CDU pour confirmer l\'information LEM YES ou NO'},{type:'attention',text:'IL EST INTERDIT DE DÉCOLLER AVEC ENGINE 1 OU ENGINE 2.'}]}]},
+  alt_deg:{label:'ALT 1 / ALT 2',cat:'PANNE ÉLECTRIQUE (DEG)',type:'deg',blocks:[{label:'CONTACTEUR ALTERNATEUR 1 OU 2 OUVERT',labelClass:'warn',content:[{type:'step',text:'Sélectionner la page ELC sur le MFD pour confirmer la panne'},{type:'step',text:'Appuyer sur le bouton-poussoir RESET 1 ou RESET 2'},{type:'conc_poursuivre',text:''},{type:'cond',text:'Si la panne persiste :'},{type:'step',text:'Interrupteur ALT 1 ou ALT 2 → sur OFF'},{type:'conc_poursuivre',text:''}]}]},
+  perte_alt:{label:'PERTE DES DEUX ALTERNATEURS',cat:'PANNE ÉLECTRIQUE (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Appuyer sur RESET 1 et RESET 2'},{type:'cond',text:'Si la panne persiste :'},{type:'step',text:'Interrupteurs ALT 1 et ALT 2 → sur OFF'},{type:'step',text:'Vérifier RLG → sur ON'},{type:'step',text:'EMERGENCY CUT-OFF (ECO1 et ECO2) → sur arrêt (vers le bas)'},{type:'conc_ecourter',text:''},{type:'attention',text:'TEMPS DE VOL MAXIMAL : 30 min'}]}]},
+  bat_deg:{label:'BAT 1 / BAT 2',cat:'PANNE ÉLECTRIQUE (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner la page ELC sur le MFD pour confirmer la panne'},{type:'step',text:'Appuyer sur le bouton-poussoir RESET 1 ou RESET 2'},{type:'conc_poursuivre',text:''},{type:'cond',text:'Si la panne persiste :'},{type:'step',text:'Passer l\'interrupteur BAT 1 ou BAT 2 → sur OFF'},{type:'conc_poursuivre',text:''}]}]},
+  tru_deg:{label:'TRU 1 / TRU 2',cat:'PANNE ÉLECTRIQUE (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner la page ELC sur le MFD pour confirmer la panne'},{type:'step',text:'Appuyer sur le bouton-poussoir RESET 1 ou RESET 2'},{type:'conc_poursuivre',text:''},{type:'cond',text:'Si la panne persiste :'},{type:'step',text:'Interrupteur TR 1 ou TR 2 → sur OFF'},{type:'conc_poursuivre',text:''}]}]},
+  flow:{label:'F LOW 1 / F LOW 2',cat:'PANNE CARBURANT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner la page FUE sur le MFD pour confirmer les niveaux de carburant'},{type:'step',text:'Surveiller les niveaux de carburant'},{type:'conc_ecourter',text:''},{type:'attention',text:'TEMPS DE VOL RESTANT : 30 min MAXIMUM AVANT EXTINCTION DES MOTEURS'}]}]},
+  fuel_deg:{label:'FUEL',cat:'PANNE CARBURANT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner la page FUE sur le MFD pour confirmer les paramètres'},{type:'step',text:'Contrôler le niveau de carburant des deux réservoirs'},{type:'conc_poursuivre',text:''}]}]},
+  fuel_bp:{label:'FUEL BP',cat:'PANNE CARBURANT (DEG)',type:'deg',blocks:[{content:[{type:'nota',text:'Si la panne de la pompe à carburant est confirmée : éviter les manœuvres brusques.'},{type:'step',text:'Sélectionner la page FUE sur le MFD pour confirmer la panne'},{type:'step',text:'Mettre l\'interrupteur de la pompe à carburant → sur ON'},{type:'conc_poursuivre',text:''}]}]},
+  fuel_p:{label:'FUEL P1 / FUEL P2',cat:'PANNE CARBURANT (DEG)',type:'deg',blocks:[{content:[{type:'attention',text:'RISQUE D\'EXTINCTION.'},{type:'step',text:'Sélectionner la page FUE sur le MFD pour confirmation'},{type:'step',text:'Placer l\'interrupteur de la pompe → sur ON'},{type:'step',text:'Éviter les manœuvres brusques et les variations rapides de pas collectif'},{type:'conc_ecourter',text:''}]}]},
+  f_filt:{label:'F FILT',cat:'PANNE CARBURANT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner la page FUEL sur le MFD pour confirmer le colmatage'},{type:'table',rows:[['Si l\'alarme disparaît','POURSUIVRE LE VOL'],['Si le moteur présente un comportement anormal','ÉCOURTER LE VOL']]}]}]},
+  f_gauge:{label:'F GAUGE',cat:'PANNE CARBURANT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner la page FUE sur le MFD pour confirmer la masse carburant'},{type:'table',rows:[['Si l\'écart des niveaux se confirme ou augmente','ÉCOURTER LE VOL'],['Si non','POURSUIVRE LE VOL']]}]}]},
+  ferry:{label:'FERRY',cat:'PANNE CARBURANT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Mettre l\'interrupteur FERRY TANK → sur ON à la demande'}]}]},
+  bingo:{label:'BINGO',cat:'PANNE CARBURANT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'La valeur du BINGO est atteinte — retourner au point de ravitaillement'}]}]},
+  aux_p:{label:'AUX.P',cat:'PANNE TRANSMISSION (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner la page TRN sur le MFD pour confirmer la panne'},{type:'step',text:'Surveiller la température et la pression BTP'},{type:'conc_poursuivre',text:''}]}]},
+  acp:{label:'ACP',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner le mode B/UP sur l\'ACP-G pour utiliser le MEP'}]}]},
+  amcsg:{label:'AMCSG',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Effectuer l\'action requise par la DO-LIST'},{type:'nota',text:'Pour vérifier la reconfiguration, effectuer une commutation du HID sur SG2.'}]}]},
+  gun:{label:'GUN',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{label:'CANON INDISPONIBLE — tir impossible',labelClass:'warn',content:[{type:'step',text:'1. Canon non engagé → POURSUIVRE LE VOL si nécessaire'},{type:'step',text:'2. Canon engagé → désengagé. En phase de tir : se reporter INCIDENT DE TIR.'},{type:'conc_poursuivre',text:''}]},{label:'CANON DÉGRADÉ — tir possible',labelClass:'warn',content:[{type:'step',text:'Tir par le tireur (RMS ou HMS) — au réticule de visée'},{type:'step',text:'Sélectionner le mode B/UP sur l\'ACP-G pour utiliser le MEP'}]}]},
+  mep:{label:'MEP',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Sélectionner le mode B/UP sur l\'ACP-G pour utiliser le MEP'}]}]},
+  mistral:{label:'MISTRAL',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{content:[{type:'cond',text:'Système missiles indisponible — tir impossible :'},{type:'step',text:'1. Système non engagé → POURSUIVRE LE VOL si nécessaire'},{type:'step',text:'2. Système engagé → désengagé. Vérifier si possible fermeture des coiffes.'},{type:'conc_poursuivre',text:''},{type:'cond',text:'PLM déclaré indisponible — tir possible de l\'autre PLM :'},{type:'step',text:'Vérifier si possible la fermeture des coiffes — vérifier disponibilité de l\'autre PLM'},{type:'conc_poursuivre',text:''}]}]},
+  hellfire:{label:'HELLFIRE',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{content:[{type:'cond',text:'Mélange de types d\'auto-directeur et/ou missile :'},{type:'table',rows:[['Si système HELLFIRE engagé','Désengager le système HELLFIRE — Poursuivre le vol si nécessaire'],['Si système HELLFIRE non engagé','Poursuivre le vol si nécessaire']]},{type:'cond',text:'Séquence de tir interrompue :'},{type:'step',text:'Le missile n\'est pas tiré — désengager le sous-système HELLFIRE. Réengager et tenter une nouvelle séquence.'}]}]},
+  misfire:{label:'MISFIRE — Missile non tiré',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Mettre la sécurité de tir équipage'},{type:'step',text:'Désengager le sous-système HELLFIRE'},{type:'step',text:'La poursuite de la mission est possible en sélectionnant un autre missile ou armement'},{type:'step',text:'Poursuivre la procédure incident de tir missiles'}]}]},
+  hangfire:{label:'HANGFIRE — Lanceur indisponible',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Stabiliser les paramètres de vol (surtout en lacet)'},{type:'step',text:'Mettre la sécurité de tir équipage'},{type:'step',text:'La poursuite de la mission est possible. Après 6 s, sélectionner l\'autre lanceur si présent.'},{type:'step',text:'Si le missile n\'est pas parti : poursuivre la procédure incident de tir missiles'}]}]},
+  rkt:{label:'RKT',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{label:'SYSTÈME ROQUETTES INDISPONIBLE — tir impossible',labelClass:'warn',content:[{type:'step',text:'1. Système non engagé → POURSUIVRE LE VOL si nécessaire'},{type:'step',text:'2. Système engagé → désengagé. En phase de tir : se reporter INCIDENT DE TIR.'},{type:'conc_poursuivre',text:''}]},{label:'SYSTÈME ROQUETTES DÉGRADÉ (mode fixe) — tir possible',labelClass:'warn',content:[{type:'step',text:'Tir au RMS — au réticule de visée : effectuer le pointage cible'}]}]},
+};
+// ── DARK MODE ──
+function updateDarkButtons(isDark) {
+  const icon = isDark ? '☀️' : '🌙';
+  document.getElementById('dark-toggle-icon').textContent = icon;
+  document.getElementById('dark-toggle-label').textContent = isDark ? 'Jour' : 'Nuit';
+  ['dt-vi','dt-doc','dt-proc','dt-combat'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = icon;
+  });
+}
+
+function toggleDark() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  updateDarkButtons(isDark);
+  try { localStorage.setItem('tigre_dark', isDark ? '1' : '0'); } catch(e) {}
+}
+
+// Restaurer la préférence au chargement
+(function(){
+  try {
+    if(localStorage.getItem('tigre_dark') === '1') {
+      document.documentElement.classList.add('dark');
+      updateDarkButtons(true);
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

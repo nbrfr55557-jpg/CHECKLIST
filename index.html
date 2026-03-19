@@ -75,7 +75,6 @@
   html.dark .card { background: var(--surface); border-color: var(--border); }
   html.dark .card-title { color: #fff; }
   html.dark .stab { background: var(--surface); color: var(--text-muted); }
-  html.dark .stab.active { color: var(--yellow); border-bottom-color: var(--yellow); }
   html.dark .reset-bar { background: var(--bg2); border-top-color: var(--border); }
   html.dark .reset-btn { background: transparent; border-color: var(--border); color: var(--text-muted); }
   html.dark .progress-bar { background: var(--border); }
@@ -343,8 +342,8 @@
   .section-tabs {
     display: flex;
     overflow-x: auto;
-    background: #fff;
-    border-bottom: 2px solid #ccc;
+    background: var(--surface);
+    border-bottom: 2px solid var(--border);
     flex-shrink: 0;
     scrollbar-width: none;
   }
@@ -355,19 +354,21 @@
     font-size: 10px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #888;
-    padding: 10px 14px;
+    color: var(--text-muted);
+    padding: 10px 6px;
     white-space: nowrap;
     cursor: pointer;
     border-bottom: 3px solid transparent;
     margin-bottom: -2px;
     transition: color 0.15s, border-color 0.15s;
-    flex-shrink: 0;
+    flex: 1;
+    text-align: center;
     -webkit-user-select: none;
     user-select: none;
-    background: #fff;
+    background: var(--surface);
   }
   .stab.active { color: #111; border-bottom-color: var(--yellow); font-weight: 700; }
+  html.dark .stab.active { color: var(--yellow); }
 
   /* content area */
   .doc-content {

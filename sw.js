@@ -1,4 +1,4 @@
-const CACHE = 'checklist-tigre-v3';
+const CACHE = 'checklist-tigre-v4';
 const FILES = ['/CHECKLIST/index.html'];
 
 self.addEventListener('install', e => {

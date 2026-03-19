@@ -1,7 +1,7 @@
 {
   "name": "TIGRE HADF — Checklists",
   "short_name": "CHECKLIST",
-  "start_url": "/CHECKLIST/CHECKLIST.html",
+  "start_url": "/CHECKLIST/index.html",
   "scope": "/CHECKLIST/",
   "display": "standalone",
   "background_color": "#1a1a1a",

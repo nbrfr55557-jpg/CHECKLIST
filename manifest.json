@@ -1,0 +1,17 @@
+{
+  "name": "TIGRE HADF — Checklists",
+  "short_name": "CHECKLIST",
+  "start_url": "/CHECKLIST/CHECKLIST.html",
+  "scope": "/CHECKLIST/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/CHECKLIST/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

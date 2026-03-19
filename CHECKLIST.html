@@ -6,7 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="TIGRE HADF">
-<meta name="theme-color" content="#0a0e0d">
+<meta name="theme-color" content="#1a1a1a">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="/CHECKLIST/manifest.json">
 <title>TIGRE HADF — Checklists</title>
 
 <style>
@@ -905,7 +907,6 @@
       <button class="label-btn urg" onclick="pShowProc('pwr')">PWR</button>
       <button class="label-btn urg-orange" onclick="pShowProc('oilp')">OILP 1 / OILP 2</button>
       <button class="label-btn urg-orange" onclick="pShowProc('oilp_sol')">GOV 1 et GOV 2<span class="label-sub">AU SOL</span></button>
-      <button class="label-btn urg-orange" onclick="pShowProc('oilp_bas')">OILP — BAS</button>
       <button class="label-btn urg-orange" onclick="pShowProc('oilt')">OILT 1 / OILT 2</button>
       <button class="label-btn urg-orange" onclick="pShowProc('oil_filt')">OIL FILT</button>
       <button class="label-btn urg-orange" onclick="pShowProc('eng_chip')">ENG CHIP</button>
@@ -1993,7 +1994,7 @@ const PROCS = {
   gov1_et_gov2:{label:'GOV 1 ET GOV 2 — EN VOL',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'danger',text:'Surveiller Ng et T45 pour déceler tout départ en survitesse nécessitant la coupure du moteur via "STOP" de l\'EEP. L\'ECP bascule automatiquement en mode MAN.'},{type:'attention',text:'PROCÉDURE INTERDITE EN ENTRAÎNEMENT EN VOL.'}]},{label:'EN VOL',labelClass:'warn',content:[{type:'step',text:'Confirmer l\'allumage des deux boutons-poussoirs MAN'},{type:'conc_ecourter',text:''},{type:'step',text:'Retrouver les conditions de vol : Vi 100 kt — NR environ 330 tr/min'},{type:'cond',text:'Panne avec forte puissance :'},{type:'step',text:'Appliquer alternativement des corrections modérées de pas collectif et de MET'},{type:'step',text:'Ajuster les NR à l\'aide des manettes secours moteur si nécessaire (plage Ng ≥ 65%)'},{type:'cond',text:'Panne avec faible puissance :'},{type:'step',text:'Appliquer principalement des corrections de pas collectif'},{type:'cond',text:'Approche et atterrissage :'},{type:'step',text:'Variation de vitesse en palier avec prudence, de 100 kt vers 70 kt'},{type:'step',text:'Prendre une trajectoire d\'approche de sécurité'},{type:'step',text:'Débuter la descente uniquement avec le pas collectif : Vi 70 kt — Vz 300 ft/min'},{type:'step',text:'Poursuivre l\'approche en réduisant prudemment la vitesse'},{type:'step',text:'Après toucher : ajuster NR — couper les deux moteurs à l\'aide des SHUT OFF'}]},{label:'EN STATIONNAIRE DANS L\'EFFET DE SOL',content:[{type:'attention',text:'PROCÉDURE INTERDITE EN ENTRAÎNEMENT EN VOL.'},{type:'step',text:'Confirmer l\'allumage des deux boutons-poussoirs MAN'},{type:'conc_ecourter',text:''},{type:'step',text:'Contrôler la hauteur et les NR à l\'aide du pas collectif'},{type:'step',text:'Descendre prudemment jusqu\'à l\'atterrissage'},{type:'step',text:'Au sol, appareil contrôlé : couper les deux moteurs à l\'aide des SHUT OFF'}]}]},
   ospd:{label:'OSPD 1 / OSPD 2',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'attention',text:'NE PAS REDÉMARRER LE MOTEUR EN PANNE.'},{type:'step',text:'Ajuster le pas collectif pour maintenir le régime nominal du rotor'},{type:'step',text:'Confirmer l\'arrêt automatique sur le moteur concerné'},{type:'step',text:'Appliquer la procédure panne sur un moteur'},{type:'conc_ecourter',text:''}]}]},
   pwr:{label:'PWR',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Ajuster le pas collectif pour maintenir le régime du rotor'},{type:'step',text:'Établir les conditions OEI'},{type:'step',text:'Sélectionner la puissance exigée'},{type:'step',text:'Vérifier sur la page AC/ENG du MFD si le ré-allumage automatique est en cours'},{type:'cond',text:'Si non, si la panne est confirmée :'},{type:'step',text:'Appliquer la procédure panne sur un moteur'},{type:'conc_ecourter',text:''}]}]},
-  oilp:{label:'OILP 1 / OILP 2',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Confirmer sur la page ENG du MFD'},{type:'cond',text:'PRESSION BASSE :'},{type:'step',text:'Couper le moteur immédiatement'},{type:'conc_ecourter',text:''},{type:'cond',text:'PRESSION NORMALE :'},{type:'conc_poursuivre',text:''},{type:'step',text:'Surveiller la pression d\'huile et le couple'}]}]},
+  oilp:{label:'OILP 1 / OILP 2',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Confirmer sur la page ENG du MFD'},{type:'cond',text:'PRESSION BASSE :'},{type:'step',text:'Couper le moteur immédiatement'},{type:'conc_ecourter',text:''},{type:'cond',text:'PRESSION NORMALE :'},{type:'conc_poursuivre',text:''},{type:'step',text:'Surveiller la pression d\'huile et le couple'}]},{label:'OILP — PRESSION BASSE/HAUTE',labelClass:'warn',content:[{type:'step',text:'Sélectionner la page ENG sur le MFD pour confirmation'},{type:'cond',text:'AU-DESSOUS DE 2,5 bar :'},{type:'step',text:'Surveiller la pression d\'huile et le couple'},{type:'conc_ecourter',text:''},{type:'cond',text:'AU-DESSUS DE 6 bar :'},{type:'step',text:'Réduire la puissance'},{type:'cond',text:'Si la pression reste excessive :'},{type:'step',text:'Arrêter le moteur concerné'},{type:'conc_ecourter',text:''}]}]},
   oilp_sol:{label:'GOV 1 et GOV 2 — AU SOL',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'cond',text:'Pendant démarrage, 10 s après appui sur START (1re tentative) :'},{type:'step',text:'Couper les moteurs démarrés — BAT2 et BAT1 sur OFF'},{type:'step',text:'RECOMMENCER LE DÉMARRAGE DES MOTEURS'},{type:'cond',text:'Pendant démarrage, 10 s après START (2e tentative) :'},{type:'step',text:'Couper les moteurs démarrés — BAT2 et BAT1 sur OFF'},{type:'step',text:'ANNULER LA MISSION'},{type:'cond',text:'PROCÉDURE EN VOL :'},{type:'step',text:'Sélectionner le régime INT'},{type:'step',text:'Page ENG sur MFD — surveiller les paramètres moteurs'},{type:'step',text:'Ne pas dépasser les limitations de la MCP'},{type:'conc_ecourter',text:''}]}]},
   oilp_bas:{label:'OILP — PRESSION BASSE/HAUTE',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{content:[{type:'step',text:'Sélectionner la page ENG sur le MFD pour confirmation'},{type:'cond',text:'AU-DESSOUS DE 2,5 bar :'},{type:'step',text:'Surveiller la pression d\'huile et le couple'},{type:'conc_ecourter',text:''},{type:'cond',text:'AU-DESSUS DE 6 bar :'},{type:'step',text:'Réduire la puissance'},{type:'cond',text:'Si la pression reste excessive :'},{type:'step',text:'Arrêter le moteur concerné'},{type:'conc_ecourter',text:''}]}]},
   oilt:{label:'OILT 1 / OILT 2',cat:'PANNE MOTEUR (URG)',type:'urg',blocks:[{label:'OILT 1 OU OILT 2',labelClass:'warn',content:[{type:'step',text:'Sélectionner la page ENG sur le MFD pour confirmation'},{type:'cond',text:'SI LA TEMPÉRATURE < 0°C :'},{type:'step',text:'Attendre que la température dépasse la limite pour utiliser la puissance'},{type:'cond',text:'SI LA TEMPÉRATURE > 110°C :'},{type:'step',text:'Réduire la puissance — si nécessaire, sélectionner SLOW'},{type:'cond',text:'Si la température reste anormale :'},{type:'step',text:'Arrêter le moteur concerné'},{type:'conc_ecourter',text:''}]},{label:'OILT 1 ET OILT 2',labelClass:'warn',content:[{type:'step',text:'Sélectionner la page ENG sur le MFD pour confirmer la panne'},{type:'cond',text:'EN VOL, SI TEMPÉRATURE > 110°C :'},{type:'step',text:'Réduire la puissance'},{type:'table',rows:[['Si température ne diminue pas','ATTERRIR DÈS QUE POSSIBLE'],['Si température diminue','POURSUIVRE LE VOL']]}]}]},
@@ -2073,5 +2074,32 @@ function toggleDark() {
   } catch(e) {}
 })();
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/CHECKLIST/sw.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          document.getElementById('update-banner').classList.add('show');
+        }
+      });
+    });
+    document.getElementById('btn-update').addEventListener('click', () => {
+      if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+    });
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      window.location.reload();
+    });
+  }).catch(() => {});
+}
+</script>
+
+<div id="update-banner" style="display:none;position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);z-index:9999;background:#1a1a1a;border:2px solid #f5e642;border-radius:0;padding:0.7rem 1.1rem;align-items:center;gap:0.8rem;white-space:nowrap;font-family:'Share Tech Mono',monospace;">
+  <span style="font-size:0.78rem;color:#f5e642;letter-spacing:0.05em;">🔄 Mise à jour disponible</span>
+  <button id="btn-update" style="background:#f5e642;color:#000;border:none;font-family:'Share Tech Mono',monospace;font-size:0.75rem;font-weight:700;letter-spacing:0.08em;padding:0.35rem 0.8rem;cursor:pointer;">INSTALLER</button>
+</div>
+<style>#update-banner.show{display:flex!important;}</style>
 </body>
 </html>

@@ -682,6 +682,9 @@
   .proc-block-label { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 5px 10px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #000; background: var(--yellow); border-bottom: 1.5px solid #333; text-align: center; }
   .proc-block-label.warn { background: var(--yellow-light); }
   .proc-block-label.info { background: #b8e8f0; }
+  html.dark .proc-block-label { color: #000; background: var(--yellow); }
+  html.dark .proc-block-label.warn { color: var(--yellow); background: #2a2600; border-bottom-color: #444; }
+  html.dark .proc-block-label.info { color: #00c9ff; background: #003040; border-bottom-color: #444; }
   .proc-badge { display: inline-block; background: #111; color: #fff; font-size: 11px; font-weight: 700; padding: 1px 5px; }
   .proc-attention { background: #fff; border-bottom: 1px solid #555; padding: 7px 12px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; text-align: center; color: #000; letter-spacing: .03em; line-height: 1.4; }
   .proc-attention-title { font-size: 13px; letter-spacing: .15em; margin-bottom: 3px; text-decoration: underline; }

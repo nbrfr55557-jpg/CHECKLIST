@@ -1,4 +1,4 @@
-const CACHE = 'checklist-tigre-v4';
+const CACHE = 'checklist-tigre-v5';
 const FILES = ['/CHECKLIST/index.html'];
 
 self.addEventListener('install', e => {
@@ -19,5 +19,4 @@ self.addEventListener('fetch', e => {
 });
 
 self.addEventListener('message', e => {
-  if (e.data === 'SKIP_WAITING') self.skipWaiting();
-});
+  if (e.data === 'SKIP_WAITING') self.skipWaiting();}); 

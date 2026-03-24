@@ -765,6 +765,13 @@
       <div class="card-arrow">›</div>
     </div>
 
+    <div class="card" style="--card-color: #00b4d8" onclick="openMarineMenu()">
+      <div class="card-tag">⚓ MARINE</div>
+      <div class="card-title">Checks Marine</div>
+      <div class="card-subtitle">Mise en route · Décollage · Appontage · En mer</div>
+      <div class="card-count">9</div>
+      <div class="card-arrow">›</div>
+    </div>
 
   </div>
   <div class="safe-bottom"></div>
@@ -817,6 +824,33 @@
     <div class="vi-card" style="--card-color:#ff4545" onclick="openCombatSection('silviapr')"><span class="vi-card-num">03</span><span class="vi-card-label">SIL/VI — Après passage en couche</span><span class="vi-card-arrow">›</span></div>
     <div class="vi-card" style="--card-color:#ff4545" onclick="openCombatSection('silviavt')"><span class="vi-card-num">04</span><span class="vi-card-label">SIL/VI — Avant passage en couche</span><span class="vi-card-arrow">›</span></div>
     <div class="vi-card" style="--card-color:#ff4545" onclick="openCombatSection('visil')"><span class="vi-card-num">05</span><span class="vi-card-label">VI-SIL</span><span class="vi-card-arrow">›</span></div>
+  </div>
+  <div class="safe-bottom"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MARINE MENU SCREEN
+══════════════════════════════════════════ -->
+<div class="screen hidden" id="marine-menu">
+  <div class="doc-header">
+    <button class="dark-toggle-mini" onclick="toggleDark()" id="dt-marine">🌙</button>
+    <div class="back-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      Accueil
+    </div>
+    <div class="doc-title-line">CHECKS MARINE</div>
+    <div class="doc-ref">HADF · Opérations embarquées</div>
+  </div>
+  <div class="cards">
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('mer_route')"><span class="vi-card-num">01</span><span class="vi-card-label">Vérif après mise en route MARINE</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('avdec_marine')"><span class="vi-card-num">02</span><span class="vi-card-label">Vérif avant décollage MARINE</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('airborn_marine')"><span class="vi-card-num">03</span><span class="vi-card-label">Vérifications AIRBORN MARINE</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('appontage1')"><span class="vi-card-num">04</span><span class="vi-card-label">1ères CHECK avant appontage</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('appontage2')"><span class="vi-card-num">05</span><span class="vi-card-label">2èmes CHECK avant appontage</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('en_mer')"><span class="vi-card-num">06</span><span class="vi-card-label">Vérifications en mer</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('retour_ami')"><span class="vi-card-num">07</span><span class="vi-card-label">Retour zone AMI en mer</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('feet_dry')"><span class="vi-card-num">08</span><span class="vi-card-label">FEET DRY — vers la terre</span><span class="vi-card-arrow">›</span></div>
+    <div class="vi-card" style="--card-color:#00b4d8" onclick="openMarineSection('feet_wet')"><span class="vi-card-num">09</span><span class="vi-card-label">FEET WET — vers la mer</span><span class="vi-card-arrow">›</span></div>
   </div>
   <div class="safe-bottom"></div>
 </div>
@@ -1667,6 +1701,40 @@ function openViMenu() {
   document.documentElement.style.setProperty('--accent', '#00c9ff');
 }
 
+function openMarineMenu() {
+  document.getElementById('home').classList.add('slide-left');
+  document.getElementById('marine-menu').classList.remove('hidden');
+  document.documentElement.style.setProperty('--accent', '#00b4d8');
+  const isDark = document.documentElement.classList.contains('dark');
+  const el = document.getElementById('dt-marine');
+  if(el) el.textContent = isDark ? '☀️' : '🌙';
+}
+
+function openMarineSection(sectionId) {
+  currentDoc = 'marine';
+  checkState = loadState();
+  const doc = DOCS['marine'];
+
+  document.getElementById('doc-title').textContent = doc.title;
+  document.getElementById('doc-ref').textContent = doc.ref;
+  document.documentElement.style.setProperty('--accent', doc.color);
+
+  buildTabs(doc);
+  document.getElementById('section-tabs').style.display = 'none';
+
+  const idx = doc.sections.findIndex(s => s.id === sectionId);
+  currentSection = idx >= 0 ? idx : 0;
+  renderSection(currentSection);
+
+  document.getElementById('doc-back-label').textContent = 'Marine';
+  document.getElementById('doc-screen')._backTarget = 'marine-menu';
+
+  document.getElementById('marine-menu').classList.add('slide-left');
+  document.getElementById('doc-screen').classList.remove('hidden');
+
+  setTimeout(() => { document.getElementById('doc-content').scrollTop = 0; }, 50);
+}
+
 function openViSection(sectionId) {
   currentDoc = 'vi';
   checkState = loadState();
@@ -1705,6 +1773,9 @@ function docGoBack() {
   } else if (target === 'combat-menu') {
     document.getElementById('combat-menu').classList.remove('slide-left');
     document.documentElement.style.setProperty('--accent', '#ff4545');
+  } else if (target === 'marine-menu') {
+    document.getElementById('marine-menu').classList.remove('slide-left');
+    document.documentElement.style.setProperty('--accent', '#00b4d8');
   } else {
     document.getElementById('home').classList.remove('slide-left');
     document.documentElement.style.setProperty('--accent', '#3dff8a');
@@ -1717,6 +1788,8 @@ function goHome() {
   document.getElementById('vi-menu').classList.add('hidden');
   document.getElementById('combat-menu').classList.remove('slide-left');
   document.getElementById('combat-menu').classList.add('hidden');
+  document.getElementById('marine-menu').classList.remove('slide-left');
+  document.getElementById('marine-menu').classList.add('hidden');
   document.getElementById('doc-screen').classList.add('hidden');
   document.documentElement.style.setProperty('--accent', '#3dff8a');
 }
@@ -2051,12 +2124,202 @@ const PROCS = {
   hangfire:{label:'HANGFIRE — Lanceur indisponible',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{content:[{type:'step',text:'Stabiliser les paramètres de vol (surtout en lacet)'},{type:'step',text:'Mettre la sécurité de tir équipage'},{type:'step',text:'La poursuite de la mission est possible. Après 6 s, sélectionner l\'autre lanceur si présent.'},{type:'step',text:'Si le missile n\'est pas parti : poursuivre la procédure incident de tir missiles'}]}]},
   rkt:{label:'RKT',cat:'PANNE ARMEMENT (DEG)',type:'deg',blocks:[{label:'SYSTÈME ROQUETTES INDISPONIBLE — tir impossible',labelClass:'warn',content:[{type:'step',text:'1. Système non engagé → POURSUIVRE LE VOL si nécessaire'},{type:'step',text:'2. Système engagé → désengagé. En phase de tir : se reporter INCIDENT DE TIR.'},{type:'conc_poursuivre',text:''}]},{label:'SYSTÈME ROQUETTES DÉGRADÉ (mode fixe) — tir possible',labelClass:'warn',content:[{type:'step',text:'Tir au RMS — au réticule de visée : effectuer le pointage cible'}]}]},
 };
+// ── MARINE ─────────────────────────────────
+DOCS.marine = {
+  title: 'CHECKS MARINE — HADF',
+  ref: 'HADF · Opérations embarquées',
+  color: '#00b4d8',
+  sections: [
+    {
+      id: 'mer_route',
+      label: 'MER ROUTE',
+      content: [
+        { type:'header', text:'VÉRIFICATIONS APRÈS MISE EN ROUTE MARINE' },
+        { who:'P+T', label:'Harnais de sécurité', value:'verrouillés' },
+        { who:'P+T', label:'Blindages latéraux', value:'en arrière' },
+        { who:'P',   label:'Frein de parking', value:'serré, voyant allumé' },
+        { who:'P',   label:'Weapon config', value:'Std/Gunner' },
+        { who:'P+T', label:'Altimètres (secours et MFD)', value:'QNH / Corrélation Hauteur Pont (HP)' },
+        { who:'P/T', label:'PTMU 1 et 2', value:'écart altimétrique inférieur à 3 HPA' },
+        { who:'P+T', label:'Hauteur de décision (DH)', value:'HP+20ft' },
+        { who:'P+T', label:'Pression et températures', value:'correctes' },
+        { who:'P+T', label:'Tous les voyants d\'alarme', value:'vérifiés' },
+        { who:'P+T', label:'Éclairages intérieurs', value:'réglés' },
+        { who:'P+T', label:'SIL + DVN', value:'réglés' },
+        { who:'P+T', label:'Pages MFD', value:'configurées' },
+        { who:'T',   label:'IFF mode 5', value:'à la demande' },
+        { who:'T',   label:'CDU/Mission management', value:'initialisé' },
+        { who:'P+T', label:'Radio-communications', value:'vérifiées' },
+        { who:'T',   label:'Harmo RMS', value:'effectués' },
+        { who:'T',   label:'Munitions', value:'configurés' },
+        { who:'P+T', label:'Weapon selection', value:'effectuée' },
+        { who:'T',   label:'Télémètre', value:'ON' },
+        { who:'P+T', label:'Éclairage INT', value:'réglés' },
+        { who:'P',   label:'HDG', value:'GPS / INRT si besoin' },
+        { who:'P/T', label:'DOP', value:'SEA' },
+        { who:'P',   label:'Horizon de secours', value:'vérifié' },
+        { who:'P',   label:'Indicateur de couple et T45', value:'à la demande' },
+        { who:'P',   label:'P3', value:'pas de prélèvement' },
+        { who:'P',   label:'Canon', value:'relevé dans l\'axe' },
+        { who:'P',   label:'Feux de nav', value:'à la demande' },
+        { who:'P',   label:'A/COLL', value:'OFF' },
+      ]
+    },
+    {
+      id: 'avdec_marine',
+      label: 'AV DEC',
+      content: [
+        { type:'header', text:'VÉRIFICATIONS AVANT DÉCOLLAGE MARINE' },
+        { who:'—',   label:'Palettes armement', value:'baissées' },
+        { who:'—',   label:'Goupilles de sécurité de largage des emports', value:'retirées' },
+        { who:'P+T', label:'Portes', value:'fermées, verrouillées' },
+        { who:'P',   label:'PG', value:'sandow enlevé' },
+        { who:'P/T', label:'Butée monomoteur', value:'SUP' },
+        { who:'P',   label:'Frein de parking', value:'serré, voyant allumé' },
+        { who:'P',   label:'M/ARM', value:'ON' },
+        { who:'P/T', label:'AFCS', value:'ON — mode TAC désengagé' },
+        { who:'P/T', label:'Phare d\'atterrissage', value:'réglé / OFF' },
+        { who:'P',   label:'Feux de nav', value:'à la demande' },
+        { who:'P+T', label:'Goupilles intérieures de sécurité des verrières', value:'retirées' },
+        { who:'—',   label:'Saisines', value:'enlevées' },
+      ]
+    },
+    {
+      id: 'airborn_marine',
+      label: 'AIRBORN',
+      content: [
+        { type:'header', text:'VÉRIFICATIONS AIRBORN MARINE' },
+        { who:'P',   label:'A/COLL', value:'ON' },
+        { who:'T',   label:'DH', value:'TRANSIT - 10%' },
+        { who:'P/T', label:'AFCS', value:'couplages annoncés vérifiés' },
+        { who:'P+T', label:'Altimètre (PFD / STBY)', value:'QNH / SONDE' },
+        { who:'P/T', label:'Transpondeur', value:'à la demande' },
+      ]
+    },
+    {
+      id: 'appontage1',
+      label: '1er APT',
+      content: [
+        { type:'header', text:'1ères CHECK AVANT APPONTAGE' },
+        { who:'P/T', label:'Paramètres moteurs', value:'vérifiés' },
+        { who:'P+T', label:'CAPs', value:'cohérents' },
+        { who:'P/T', label:'DA TDP Jour / Nuit', value:'HP+20ft' },
+        { who:'P/T', label:'DA SCA', value:'H mâture+20ft' },
+        { who:'P/T', label:'DA PS', value:'H pont' },
+        { who:'P/T', label:'DH', value:'TRANSIT - 10%' },
+        { who:'P+T', label:'Altimètre', value:'corrélation QNH / sonde' },
+        { who:'P/T', label:'FIRE / FAST / EWS', value:'OFF' },
+        { who:'T',   label:'CFD', value:'OFF' },
+        { who:'P/T', label:'', value:'' },
+      ]
+    },
+    {
+      id: 'appontage2',
+      label: '2ème APT',
+      content: [
+        { type:'header', text:'2èmes CHECK AVANT APPONTAGE' },
+        { who:'P/T', label:'Butée monomoteur', value:'SUP' },
+        { who:'P',   label:'Frein de parking', value:'serré / voyant allumé — (N-1) desserré / voyant éteint' },
+        { who:'P',   label:'Roulette de queue', value:'voyant éteint' },
+        { who:'P+T', label:'Canon', value:'relevé dans l\'axe' },
+        { who:'P/T', label:'P3', value:'pas de prélèvement' },
+        { who:'P/T', label:'DH TDP Jour / Nuit', value:'H pont + 20ft' },
+        { who:'P/T', label:'DH SCA', value:'H pont + 20ft' },
+        { who:'P/T', label:'DH PS', value:'H pont (mini 30ft)' },
+        { who:'P+T', label:'AFCS', value:'mode TAC désengagé' },
+        { who:'P',   label:'A/COLL', value:'IPD en vue : A/COLL sur OFF' },
+      ]
+    },
+    {
+      id: 'en_mer',
+      label: 'EN MER',
+      content: [
+        { type:'header', text:'VÉRIFICATIONS EN MER' },
+        { who:'P+T', label:'Fenêtres', value:'ouvertes' },
+        { who:'P',   label:'Frein de parking', value:'desserré / voyant éteint' },
+        { who:'P/T', label:'HDG SOURCE', value:'INRT ou MAG vérifié' },
+        { who:'P/T', label:'Altimètre', value:'corrélation QNH / sonde' },
+        { who:'P/T', label:'DA', value:'TRANSIT - 10%' },
+        { who:'P/T', label:'DH', value:'TRANSIT - 10%' },
+        { who:'P',   label:'A/COLL', value:'à la demande' },
+        { who:'P',   label:'Horizon secours', value:'cohérent' },
+        { who:'P/T', label:'Paramètres moteurs', value:'vérifiés' },
+        { who:'P+T', label:'Warning panel / stripe', value:'vérifié' },
+      ]
+    },
+    {
+      id: 'retour_ami',
+      label: 'RETOUR AMI',
+      content: [
+        { type:'header', text:'VÉRIFICATIONS RETOUR ZONE AMI EN MER' },
+        { who:'P/T', label:'Autonomie', value:'annoncée' },
+        { who:'P/T', label:'Minimas', value:'à vue : DA/DH Hauteur du pont + 20ft — SCA : DA (PHA) 210ft / 800yrd — P.S. : DH Hauteur du pont' },
+        { who:'P',   label:'AFCS', value:'mode TAC désengagé' },
+        { who:'T',   label:'Intentions', value:'spot / approche / place PIL' },
+      ]
+    },
+    {
+      id: 'feet_dry',
+      label: 'FEET DRY',
+      content: [
+        { type:'header', text:'FEET DRY — VERS LA TERRE' },
+        { who:'P+T', label:'Blindages latéraux', value:'en place' },
+        { who:'P/T', label:'Butée monomoteur', value:'réglés' },
+        { who:'P',   label:'Frein de parking', value:'serré, voyant allumé' },
+        { who:'P',   label:'M/ARM', value:'Std/Gunner' },
+        { who:'P+T', label:'AFCS', value:'QNH / Corrélation Hauteur Pont (HP)' },
+        { who:'P+T', label:'Altimètre', value:'écart altimétrique inférieur à 3 HPA' },
+        { who:'P/T', label:'DA', value:'HP+20ft' },
+        { who:'P/T', label:'DH', value:'correctes' },
+        { who:'P',   label:'Éclairage EXT', value:'vérifiés' },
+        { who:'T',   label:'OBTD', value:'réglés' },
+        { who:'T',   label:'HARMO RMS', value:'réglés' },
+        { who:'P+T', label:'Asservissement visée', value:'configurées' },
+        { who:'P/T', label:'DOP MUTE', value:'à la demande' },
+        { who:'P/T', label:'RADALT', value:'initialisé' },
+        { who:'T',   label:'CFD', value:'vérifiées' },
+        { who:'T',   label:'FAST TRIGGER', value:'effectués' },
+        { who:'P/T', label:'FIRE', value:'configurés' },
+        { who:'P/T', label:'IFF mode 5', value:'effectuée' },
+        { who:'P/T', label:'transpondeur', value:'ON' },
+        { who:'P/T', label:'DOP', value:'réglés' },
+        { who:'P',   label:'Horizon secours', value:'GPS / INRT si besoin' },
+        { who:'P+T', label:'Paramètres moteurs', value:'SEA' },
+        { who:'P+T', label:'Warning panel / stripe', value:'vérifié' },
+        { who:'P+T', label:'Armement', value:'à la demande' },
+      ]
+    },
+    {
+      id: 'feet_wet',
+      label: 'FEET WET',
+      content: [
+        { type:'header', text:'FEET WET — VERS LA MER' },
+        { who:'P+T', label:'Blindages', value:'en arrière' },
+        { who:'P/T', label:'Butée monomoteur', value:'SUP' },
+        { who:'P+T', label:'AFCS', value:'couplages annoncés vérifiés' },
+        { who:'P+T', label:'Altimètre', value:'corrélation QNH / sonde' },
+        { who:'P/T', label:'DA', value:'TRANSIT - 10%' },
+        { who:'P/T', label:'DH', value:'TRANSIT - 10%' },
+        { who:'P',   label:'Éclairage EXT', value:'adapté mission' },
+        { who:'T',   label:'OBTD', value:'OFF' },
+        { who:'P/T', label:'DOP MUTE', value:'à la demande' },
+        { who:'P/T', label:'RADALT', value:'à la demande' },
+        { who:'P/T', label:'IFF', value:'à la demande' },
+        { who:'P/T', label:'DOP', value:'SEA' },
+        { who:'P',   label:'Horizon de secours', value:'vérifié' },
+        { who:'P+T', label:'Paramètres moteurs', value:'vérifiés' },
+        { who:'P+T', label:'Warning panel / stripe', value:'vérifié' },
+      ]
+    },
+  ]
+};
+
 // ── DARK MODE ──
 function updateDarkButtons(isDark) {
   const icon = isDark ? '☀️' : '🌙';
   document.getElementById('dark-toggle-icon').textContent = icon;
   document.getElementById('dark-toggle-label').textContent = isDark ? 'Jour' : 'Nuit';
-  ['dt-vi','dt-doc','dt-proc','dt-combat'].forEach(id => {
+  ['dt-vi','dt-doc','dt-proc','dt-combat','dt-marine'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = icon;
   });

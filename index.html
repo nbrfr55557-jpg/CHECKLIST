@@ -728,7 +728,7 @@
       TIGRE
       <span>Check-lists opérationnelles</span>
     </div>
-    <div class="header-sub">© Airbus Helicopters 2024 · Usage équipage</div>
+    <div class="header-sub">© Airbus Helicopters 2024 · Usage équipage · <span id="app-version" style="color:#f5e642;opacity:0.8;">v1.0</span></div>
   </div>
 
   <div class="cards">
@@ -2358,6 +2358,16 @@ if ('serviceWorker' in navigator) {
     });
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       window.location.reload();
+    });
+    // Récupérer la version depuis le SW
+    navigator.serviceWorker.addEventListener('message', e => {
+      if (e.data && e.data.type === 'VERSION') {
+        const el = document.getElementById('app-version');
+        if (el) el.textContent = e.data.version;
+      }
+    });
+    navigator.serviceWorker.ready.then(r => {
+      if (r.active) r.active.postMessage('GET_VERSION');
     });
   }).catch(() => {});
 }

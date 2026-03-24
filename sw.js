@@ -1,4 +1,5 @@
-const CACHE = 'checklist-tigre-v6';
+const CACHE = 'checklist-tigre-v7';
+const VERSION = 'v1.0';
 const FILES = ['/CHECKLIST/index.html'];
 
 self.addEventListener('install', e => {
@@ -20,4 +21,5 @@ self.addEventListener('fetch', e => {
 
 self.addEventListener('message', e => {
   if (e.data === 'SKIP_WAITING') self.skipWaiting();
+  if (e.data === 'GET_VERSION') e.source.postMessage({ type: 'VERSION', version: VERSION });
 });
